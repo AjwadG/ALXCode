@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import runComand from "./comands.js";
-
+import getTree from "./dir.js";
 
 const app = express();
 const server = createServer(app);
@@ -15,6 +15,12 @@ app.use(express.static("public"));
 
 app.get("/", (req, res) => {
   res.render("index.ejs");
+});
+
+app.get("/api/getTree", (req, res) => {
+  const { path } = req.body;
+  const tree = getTree(path);
+  res.json(tree);
 });
 
 server.listen(process.env.PORT, () => {
