@@ -27,8 +27,9 @@ class Dir extends FileType {
 }
 
 class File extends FileType {
-  constructor(path, id) {
+  constructor(path, id, data) {
     super(path, false, id);
+    this.data = data;
   }
 }
 
@@ -41,7 +42,11 @@ function buildTree(parent, id) {
       buildTree(dir, id);
       parent.addChiled(dir);
     } else {
-      const file = new File(path + "/" + node.name, id[0]++);
+      const file = new File(
+        path + "/" + node.name,
+        id[0]++,
+        fs.readFileSync(path + "/" + node.name).toString("utf-8")
+      );
       parent.addChiled(file);
     }
   }
