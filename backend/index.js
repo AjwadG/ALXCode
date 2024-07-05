@@ -31,8 +31,18 @@ app.get("/api/getTree", (req, res) => {
   if (!path) return res.status(400).json({ error: "path is required" });
 
   const tree = getTree(path);
-  
+
   res.json(tree);
+});
+
+app.get("/api/readFile", async (req, res) => {
+  const { path } = req.body;
+
+  if (!path) return res.status(400).json({ error: "path is required" });
+
+  const output = await OneCommand.execute(`cat ${path}`);
+
+  res.json(output);
 });
 
 app.put("/api/move", (req, res) => {
