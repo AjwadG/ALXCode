@@ -14,6 +14,12 @@ const io = new Server(server);
 app.use(express.static("public"));
 app.use(bodyParser.json());
 
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
+    return res.status(400).json({ error: "Invalid JSON" });
+  }
+  next();
+});
 
 app.get("/", (req, res) => {
   res.render("index.ejs");
@@ -25,7 +31,7 @@ app.get("/api/getTree", (req, res) => {
   if (!path) return res.status(400).json({ error: "path is required" });
 
   const tree = getTree(path);
-
+  
   res.json(tree);
 });
 
