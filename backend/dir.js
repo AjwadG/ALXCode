@@ -27,26 +27,26 @@ class Dir extends FileType {
 }
 
 class File extends FileType {
-  constructor(path, id, data) {
+  constructor(path, id) {
     super(path, false, id);
-    this.data = data;
   }
 }
 
 function buildTree(parent, id) {
   const path = parent.path;
-  const files = fs.readdirSync(path, { withFileTypes: true });
+  let files;
+  try {
+    files = fs.readdirSync(path, { withFileTypes: true });
+  } catch (error) {
+    return;
+  }
   for (const node of files) {
     if (node.isDirectory()) {
       const dir = new Dir(path + "/" + node.name, id[0]++);
       buildTree(dir, id);
       parent.addChiled(dir);
     } else {
-      const file = new File(
-        path + "/" + node.name,
-        id[0]++,
-        fs.readFileSync(path + "/" + node.name).toString("utf-8")
-      );
+      const file = new File(path + "/" + node.name, id[0]++);
       parent.addChiled(file);
     }
   }
