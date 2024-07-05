@@ -1,0 +1,79 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f2f2f2;
+}
+
+h1 {
+  color: #333;
+}
+
+h2 {
+  color: #666;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+pre {
+  background-color: #f5f5f5;
+  padding: 10px;
+}
+
+code {
+  font-family: Consolas, monospace;
+  font-size: 14px;
+}
+
+.endpoint {
+  margin-bottom: 20px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.endpoint h2 {
+  margin-bottom: 5px;
+  color: #ff7f50;
+}
+
+a {
+  color: #ff7f50;
+}
+
+.endpoint p {
+  color: #888;
+}
+
+.example {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.get-method {
+  color: #228b22;
+}
+
+.request {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.response {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}

@@ -25,7 +25,11 @@ app.get("/", (req, res) => {
   res.render("index.ejs");
 });
 
-app.get("/api/getTree", (req, res) => {
+app.get("/doc", (req, res) => {
+  res.render("doc.ejs");
+});
+
+app.get("/api/getTree", async (req, res) => {
   const { path } = req.body;
 
   if (!path) return res.status(400).json({ error: "path is required" });
