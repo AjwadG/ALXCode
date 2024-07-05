@@ -6,11 +6,13 @@ import { createServer } from "http";
 import chell from "./comands.js";
 import getTree from "./dir.js";
 import OneCommand from "./oneCommand.js";
+import cors from "cors";
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
+app.use(cors());
 app.use(express.static("public"));
 app.use(bodyParser.json());
 
