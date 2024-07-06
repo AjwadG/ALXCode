@@ -1,8 +1,25 @@
+import TopBar from "./Topbar"
+import Explorer from "./Explorer"
+import FileNavigation from "./FileNavigation"
+import CodeBlock from "./CodeBlock"
+import Footer from "./Footer"
+
+const fixOverflow = {
+  height: 'calc(100% - 48px)'
+}
 function App() {
   return (
-    <h1 className="text-3xl text-center p-9 font-bold text-blue-500">
-      ALL READY!
-    </h1>
+    <div className="w-full h-screen bg-blue-950">
+      <TopBar />
+      <div className="flex w-full" style={fixOverflow}>
+        <Explorer/>
+        <div className="w-full">
+            <FileNavigation/>
+            <CodeBlock/>
+        </div>
+      </div>
+      <Footer/>
+    </div>
   )
 }
 

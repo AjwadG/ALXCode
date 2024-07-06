@@ -1,3 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.bg-main {
+    background-color: #10151d;
+}
+
+.bg-second {
+    background-color: #1f2939;
+}
+
+.text-main {
+    color: #d9dfe7;
+}
+
+.border-b-1 {
+    border-bottom: 1px solid #4f5966;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.i-left {
+    margin-right: auto;
+}
+
+.i-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
