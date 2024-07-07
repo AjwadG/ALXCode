@@ -1,7 +1,10 @@
-function Footer() {
+function Footer({ handleToggleTerminal, isTerminalVisible }) {
     return (
         <div className="h-6 absolute bottom-0 left-0 w-full bg-sky-500 text-white">
-            Footer
+            <ul className="flex items-center h-full gap-6 text-xs px-2 text-black">
+                <li className="cursor-pointer" onClick={handleToggleTerminal} >{isTerminalVisible ? 'Hide Terminal' : 'Show Terminal'}</li>
+                <li className="cursor-pointer">Output</li>
+            </ul>
         </div>
     )
 }
