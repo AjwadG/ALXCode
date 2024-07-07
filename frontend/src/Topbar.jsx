@@ -17,7 +17,7 @@ const InputStyle = {
 }
 function TopBar() {
     return (
-        <div className="w-full h-12 flex-container items-center bg-main border-b-2 border-slate-800 py-5 px-1">
+        <div className="w-full h-12 flex-container items-center bg-main  py-5 px-1">
             <img src={alxLogo} style={logoStyle} className="i-left"/>
             <input type="text" className="i-center" style={InputStyle} placeholder="Find File"/>
         </div>
