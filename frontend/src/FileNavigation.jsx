@@ -1,4 +1,6 @@
 import { FaFile } from "react-icons/fa";
+
+
 function FileNavigation() {
     return (
     <div className="w-full flex h-8 bg-second">

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import TopBar from "./Topbar"
 import Explorer from "./Explorer"
 import FileNavigation from "./FileNavigation"
@@ -8,6 +9,12 @@ const fixOverflow = {
   height: 'calc(100% - 48px)'
 }
 function App() {
+  const [isTerminalVisible, setIsTerminalVisible] = useState(false);
+
+  const handleToggleTerminal = () => {
+      setIsTerminalVisible(!isTerminalVisible);
+  };
+
   return (
     <div className="w-full h-screen bg-blue-950">
       <TopBar />
@@ -15,10 +22,10 @@ function App() {
         <Explorer/>
         <div className="w-full">
             <FileNavigation/>
-            <CodeBlock/>
+            <CodeBlock isTerminalVisible={isTerminalVisible}/>
         </div>
       </div>
-      <Footer/>
+      <Footer handleToggleTerminal={handleToggleTerminal} isTerminalVisible={isTerminalVisible}/>
     </div>
   )
 }
