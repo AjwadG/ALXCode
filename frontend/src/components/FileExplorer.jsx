@@ -41,11 +41,39 @@ const initialStructure = {
   ],
 };
 
+
 function FileExplorer({ setNavFiles }) {
   const [structure, setStructure] = useState(initialStructure);
+
+  const deleteFile = (file) => {
+    const deleteRecursively = (folder) => {
+      if (!folder.isFolder) return;
+
+      folder.children = folder.children.filter(child => child.id !== file.id);
+      folder.children.forEach(deleteRecursively);
+    };
+
+    const newStructure = { ...structure };
+    deleteRecursively(newStructure);
+    setStructure(newStructure);
+  };
+
+  const deleteItem = (item) => {
+    const deleteRecursively = (folder) => {
+      if (!folder.isFolder) return;
+
+      folder.children = folder.children.filter(child => child.id !== item.id);
+      folder.children.forEach(deleteRecursively);
+    };
+
+    const newStructure = { ...structure };
+    deleteRecursively(newStructure);
+    setStructure(newStructure);
+  };
+
   return (
     <div className="pt-4">
-      <Folder folder={structure} setNavFiles={setNavFiles} />
+      <Folder folder={structure} setNavFiles={setNavFiles} onDelete={deleteItem} />
     </div>
   );
 }

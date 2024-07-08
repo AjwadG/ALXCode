@@ -1,13 +1,18 @@
 import React, { useState } from "react";
-import { FaFolder, FaFolderOpen, FaFile } from "react-icons/fa";
+import { FaFolder, FaFolderOpen, FaTrash } from "react-icons/fa";
 import File from "./File";
 import "./Explorer.css";
 
-function Folder({ folder, setNavFiles }) {
+function Folder({ folder, setNavFiles, onDelete }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    onDelete(folder);
   };
 
   return (
@@ -22,14 +27,17 @@ function Folder({ folder, setNavFiles }) {
           <FaFolder className="mr-1 text-amber-300" />
         )}{" "}
         {folder.name}
+        <span className="ml-auto">
+          <FaTrash className="text-red-500 cursor-pointer text-xs opacity-10 hover:opacity-100" onClick={handleDelete}  />
+        </span>
       </div>
       {isOpen && (
         <div className="folder-contents">
           {folder.children.map((item) =>
             item.isFolder ? (
-              <Folder key={item.name} folder={item} setNavFiles={setNavFiles} />
+              <Folder key={item.name} folder={item} setNavFiles={setNavFiles} onDelete={onDelete} />
             ) : (
-              <File key={item.name} file={item} setNavFiles={setNavFiles} />
+              <File key={item.name} file={item} setNavFiles={setNavFiles} onDelete={onDelete} />
             )
           )}
         </div>
