@@ -45,11 +45,11 @@ function Folder({ folder, setNavFiles, onDelete, DND }) {
         </span>
       </div>
       {isOpen && (
-        <div className="folder-contents">
+        <div className="folder-contents pl-5">
           {folder.children.map((item) =>
             item.isFolder ? (
               <Folder
-                key={item.name}
+                key={item.id}
                 folder={item}
                 setNavFiles={setNavFiles}
                 onDelete={onDelete}
@@ -57,7 +57,7 @@ function Folder({ folder, setNavFiles, onDelete, DND }) {
               />
             ) : (
               <File
-                key={item.name}
+                key={item.id}
                 file={item}
                 setNavFiles={setNavFiles}
                 onDelete={onDelete}
