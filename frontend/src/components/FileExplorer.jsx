@@ -89,6 +89,7 @@ function FileExplorer({ setNavFiles }) {
   const [draggedFile, setDraggedFile] = useState(null);
 
   function checkTree(nodeToCheck, targetParent) {
+    if (!targetParent.isFolder) return true;
     let parent = nodeToCheck.parent;
 
     while (parent) {
@@ -108,8 +109,9 @@ function FileExplorer({ setNavFiles }) {
     static handleDrop(targetFolder) {
       if (
         draggedFile &&
-        targetFolder.parent !== draggedFile.parent &&
-        targetFolder.isFolder && checkTree(targetFolder, draggedFile)
+        targetFolder !== draggedFile.parent &&
+        targetFolder.isFolder &&
+        checkTree(targetFolder, draggedFile)
       ) {
         draggedFile.parent.children = draggedFile.parent.children.filter(
           (child) => child.id !== draggedFile.id
