@@ -33,6 +33,7 @@ function App() {
   };
 
   useEffect(() => {
+    console.log(activeFile);
     if (activeFile) {
       setFileContent(activeFile.content);
     }
