@@ -41,23 +41,28 @@ type FileType struct {
 func main() {
 	fmt.Println("Hello, World!")
 	app := fiber.New()
+
+	app.Static("/scripts", "./static/public/scripts")
+	app.Static("/style", "./static/public/style")
+
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
+		return c.SendFile("./static/views/index.html")
+	})
+	app.Get("/doc", func(c *fiber.Ctx) error {
+		return c.SendFile("./static/views/doc.html")
 	})
 
-	app.Get("/api/getTree", HandleGetTree)
+	app.Route("/api", func(api fiber.Router) {
 
-	app.Get("/api/readFile", HandleReadFile)
+		api.Get("/getTree", HandleGetTree)
+		api.Get("/readFile", HandleReadFile)
+		api.Put("/move", HandleMove)
+		api.Put("/rename", HandleRename)
+		api.Delete("/delete", HandleDelete)
+		api.Post("/create", HandleCreate)
+		api.Post("/save", HandleSave)
 
-	app.Put("/api/move", HandleMove)
-
-	app.Put("/api/rename", HandleRename)
-
-	app.Delete("/api/delete", HandleDelete)
-
-	app.Post("/api/create", HandleCreate)
-
-	app.Post("/api/save", HandleSave)
+	})
 
 	log.Fatal(app.Listen(":3000"))
 }
