@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"sync"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -238,37 +239,61 @@ func HandleGetTree(c *fiber.Ctx) error {
 		fmt.Println(err)
 		return err
 	}
-	id := 0
-	getTree(subdirs, tree, &id)
+	var wg sync.WaitGroup
 
+	wg.Add(1)
+	getTree(subdirs, tree, &idCounter{id: 0}, &wg)
+	wg.Wait()
 	return c.JSON(tree)
 }
 
-func getTree(files []fs.DirEntry, parent *FileType, id *int) {
-	for i, file := range files {
-		*id++
+type idCounter struct {
+	id      int
+	idMutex sync.Mutex
+}
+
+func (i *idCounter) GetId() int {
+	i.idMutex.Lock()
+	defer i.idMutex.Unlock()
+	i.id++
+	return i.id
+}
+
+func getTree(files []fs.DirEntry, parent *FileType, id *idCounter, prevWG *sync.WaitGroup) {
+	var wg sync.WaitGroup
+
+	var childNodes []FileType
+
+	for _, file := range files {
 		node := FileType{
 			Dir:    file.IsDir(),
-			Id:     *id,
+			Id:     id.GetId(),
 			Path:   parent.Path + "/" + file.Name(),
 			Name:   file.Name(),
 			Parent: parent.Path,
 			Childs: []FileType{},
 		}
-		parent.Childs = append(parent.Childs, node)
-		if node.Dir {
-			subdirs, err := os.ReadDir(node.Path)
+		childNodes = append(childNodes, node)
+	}
+
+	parent.Childs = append(parent.Childs, childNodes...)
+
+	for i := range childNodes {
+		if childNodes[i].Dir {
+			subdirs, err := os.ReadDir(childNodes[i].Path)
 			if err != nil {
 				continue
 			}
-			getTree(subdirs, &parent.Childs[i], id)
+			wg.Add(1)
+			go getTree(subdirs, &parent.Childs[i], id, &wg)
 		}
 	}
+	wg.Wait()
+	prevWG.Done()
 }
 
 func OneCommand(command string, args ...string) ComnadReturn {
 	cmd := exec.Command(command, args...)
-	fmt.Println(cmd.Args)
 	output, err := cmd.Output()
 	if err != nil {
 		return ComnadReturn{
