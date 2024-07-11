@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Documentation</title>
+    <link rel="stylesheet" href="style/doc.css" />
+  </head>
+  <body>
+    <h1>ALXCode Backend API Documentation</h1>
+    <p>
+      Welcome to the documentation of the ALXCode backend API, this api allows
+      you to interact with the ALXCode backend, Please refer to the
+      documentation below for details on how to interact with the API.
+    </p>
+    <li>The API is ment to be used localy or on the sandbox</li>
+    <li>
+      all of the api end point have direct access to your local files use with
+      caution
+    </li>
+    <h2>Authentication</h2>
+    <ul>
+      <li>
+        <strong>No authentication required</strong>
+      </li>
+    </ul>
+    <br />
+
+    <br />
+    <h2>REST API</h2>
+    <div class="endpoint">
+      <h2>GET /api/getTree</h2>
+      <p>Gets the tree of the sublied path</p>
+      <p><strong>Request Body:</strong></p>
+      <code>
+        <pre>
+{
+      "path": "/path/to/directory"
+}
+</pre
+        >
+      </code>
+      <div class="example">
+        <p><strong>Example Request:</strong></p>
+        <div class="request">
+          <code>
+            <span class="get-method">GET</span>
+            SERVER_URL:SERVER_PORT/api/getTree
+          </code>
+          <code>
+            <pre>
+{
+      "path": "/home/ajwadg/ajwad/alx/ALXCode/backend/views",
+}</pre
+            >
+          </code>
+        </div>
+        <p><strong>Example Response:</strong></p>
+        <div class="response">
+          <code>
+            <pre>
+{
+    "id": 1,
+    "path": "/home/ajwadg/ajwad/alx/ALXCode/backend/views",
+    "name": "views",
+    "parent": "/home/ajwadg/ajwad/alx/ALXCode/backend",
+    "dir": true,
+    "childs": [
+        {
+            "id": 2,
+            "path": "/home/ajwadg/ajwad/alx/ALXCode/backend/views/doc.ejs",
+            "name": "doc.ejs",
+            "parent": "/home/ajwadg/ajwad/alx/ALXCode/backend/views",
+            "dir": false
+        },
+        {
+            "id": 3,
+            "path": "/home/ajwadg/ajwad/alx/ALXCode/backend/views/index.ejs",
+            "name": "index.ejs",
+            "parent": "/home/ajwadg/ajwad/alx/ALXCode/backend/views",
+            "dir": false
+        }
+    ]
+}</pre
+            >
+          </code>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <h2>GET /api/readFile</h2>
+      <p>Gets the Conten of the sublied file</p>
+      <p><strong>Request Body:</strong></p>
+      <code>
+        <pre>
+{
+      "path": "/path/to/file"
+}</pre
+        >
+      </code>
+      <div class="example">
+        <p><strong>Example Request:</strong></p>
+        <div class="request">
+          <code>
+            <span class="get-method">GET</span>
+            SERVER_URL:SERVER_PORT/api/readFile
+          </code>
+          <code>
+            <pre>
+{
+      "path": "/home/ajwadg/ajwad/alx/ALXCode/backend/views/doc.ejs",
+}</pre
+            >
+          </code>
+        </div>
+        <p><strong>Example Response:</strong></p>
+        <div class="response">
+          <code>
+            <pre>
+{
+    "succeed": true,
+    "output": "Content of this webpage :D",
+    "error": ""
+}</pre
+            >
+          </code>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <h2>PUT /api/move</h2>
+      <p>Moves the sublied file or directory to the sublied path</p>
+      <p><strong>Request Body:</strong></p>
+      <code>
+        <pre>
+{
+      "oldPath": "/path/to/file_or_directory",
+      "newPath": "/path/to/destination"
+}
+  </pre
+        >
+      </code>
+      <div class="example">
+        <p><strong>Example Request:</strong></p>
+        <div class="request">
+          <code>
+            <span class="get-method">PUT</span>
+            SERVER_URL:SERVER_PORT/api/move
+          </code>
+          <code>
+            <pre>
+{
+      "oldPath": "/home/ajwadg/ajwad/alx/ALXCode/backend/views/doc.ejs",
+      "newPath": "/home/ajwadg/ajwad/alx/ALXCode/backend/views/documentation.ejs",
+}</pre
+            >
+          </code>
+        </div>
+        <p><strong>Example Response:</strong></p>
+        <div class="response">
+          <code>
+            <pre>
+{
+    "succeed": true,
+    "output": "",
+    "error": ""
+}</pre
+            >
+          </code>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <h2>PUT /api/rename</h2>
+      <p>Renames a file or directory</p>
+      <p><strong>Request Body:</strong></p>
+      <code>
+        <pre>
+{
+      "oldPath": "/path/to/file_or_directory"
+      "newName": "new_name"
+}</pre
+        >
+      </code>
+      <div class="example">
+        <p><strong>Example Request:</strong></p>
+        <div class="request">
+          <code>
+            <span class="get-method">PUT</span>
+            SERVER_URL:SERVER_PORT/api/rename
+          </code>
+          <code>
+            <pre>
+{
+      "path": "/home/ajwadg/ajwad/alx/ALXCode/backend/views/doc.ejs",
+      "newName": "documentation.ejs"
+}</pre
+            >
+          </code>
+        </div>
+        <p><strong>Example Response:</strong></p>
+        <div class="response">
+          <code>
+            <pre>
+{
+    "succeed": true,
+    "output": "",
+    "error": ""
+}</pre
+            >
+          </code>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <h2>DELETE /api/delete</h2>
+      <p>Deletes the sublied file or directory</p>
+      <p><strong>Request Body:</strong></p>
+      <code>
+        <pre>
+{
+      "path": "/path/to/file_or_directory"
+}</pre
+        >
+      </code>
+      <div class="example">
+        <p><strong>Example Request:</strong></p>
+        <div class="request">
+          <code>
+            <span class="get-method">DELETE</span>
+            SERVER_URL:SERVER_PORT/api/delete
+          </code>
+          <code>
+            <pre>
+{
+      "path": "/home/ajwadg/ajwad/alx/ALXCode/backend/views/doc.ejs",
+}</pre
+            >
+          </code>
+        </div>
+        <p><strong>Example Response:</strong></p>
+        <div class="response">
+          <code>
+            <pre>
+{
+    "succeed": true,
+    "output": "",
+    "error": ""
+}</pre
+            >
+          </code>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <h2>POST /api/create</h2>
+      <p>Creates a file or directory</p>
+      <p><strong>Request Body:</strong></p>
+      <code>
+        <pre>
+{
+      "path": "/path/to/directory"
+      "fileName": "new_file_name_or_directory_name"
+      "isDir": "true/false (default: false)"
+}</pre
+        >
+      </code>
+      <div class="example">
+        <p><strong>Example Request:</strong></p>
+        <div class="request">
+          <code>
+            <span class="get-method">POST</span>
+            SERVER_URL:SERVER_PORT/api/create
+          </code>
+          <code>
+            <pre>
+{
+      "path": "/home/ajwadg/ajwad/alx/ALXCode/backend/views",
+      "fileName": "pages",
+      "isDir": "true",
+}</pre
+            >
+          </code>
+        </div>
+        <p><strong>Example Response:</strong></p>
+        <div class="response">
+          <code>
+            <pre>
+{
+    "succeed": true,
+    "output": "",
+    "error": ""
+}</pre
+            >
+          </code>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <h2>POST /api/save</h2>
+      <p>
+        saves the content to a file if the file dosnt exist it will create it
+      </p>
+      <p><strong>Request Body:</strong></p>
+      <code>
+        <pre>
+{
+      "filePath": "/path/to/file"
+      "content": "content of the file"
+}</pre
+        >
+      </code>
+      <div class="example">
+        <p><strong>Example Request:</strong></p>
+        <div class="request">
+          <code>
+            <span class="get-method">POST</span>
+            SERVER_URL:SERVER_PORT/api/save
+          </code>
+          <code>
+            <pre>
+{
+      "filePath": "/home/ajwadg/ajwad/alx/ALXCode/backend/views/doc.ejs"
+      "content": "water is good"
+}</pre
+            >
+          </code>
+        </div>
+        <p><strong>Example Response:</strong></p>
+        <div class="response">
+          <code>
+            <pre>
+{
+    "succeed": true,
+    "output": "",
+    "error": ""
+}</pre
+            >
+          </code>
+        </div>
+      </div>
+    </div>
+    <footer>
+      The design was taken from <a href="https://secrets-api.appbrewery.com/">The App Brewery API</a>
+    </footer>
+  </body>
+</html>
