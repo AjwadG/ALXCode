@@ -85,6 +85,7 @@ initialStructure.children = initialStructure.children.map((node) => {
 
 function FileExplorer({ setNavFiles }) {
   const [structure, setStructure] = useState(initialStructure);
+  const [fileInEdit, setFileInEdit] = useState(null);
 
   const [draggedFile, setDraggedFile] = useState(null);
 
@@ -102,6 +103,21 @@ function FileExplorer({ setNavFiles }) {
   }
 
   class DND {
+    static getFileInEdit() {
+      return fileInEdit;
+    }
+    static handleFileEdit(newName) {
+      if (fileInEdit) {
+        fileInEdit.name = newName;
+        setStructure(structure);
+        setFileInEdit(null);
+        setNavFiles(null, null, true);
+      }
+    }
+
+    static handleDoubleClick(file) {
+      setFileInEdit(file);
+    }
     static handleDragStart(file) {
       setDraggedFile(file);
     }
@@ -152,6 +168,7 @@ function FileExplorer({ setNavFiles }) {
     const newStructure = { ...structure };
     deleteRecursively(newStructure);
     setStructure(newStructure);
+    setNavFiles(item);
   };
 
   return (
