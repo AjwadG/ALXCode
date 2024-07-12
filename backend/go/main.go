@@ -8,8 +8,10 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+	"sync/atomic"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/websocket/v2"
 )
 
 type Todo struct {
@@ -39,9 +41,34 @@ type FileType struct {
 	Childs []FileType `json:"childs"`
 }
 
+type TerminalSession struct {
+	ID    int64
+	Dir   string
+	CmdCh chan string
+	OutCh chan string
+}
+
+type ComnadReturn struct {
+	Succeed bool   `json:"succeed"`
+	Output  string `json:"output"`
+	Error   string `json:"error"`
+}
+type ErrorReturn struct {
+	Error string `json:"error"`
+}
+
+type idCounter struct {
+	id      int
+	idMutex sync.Mutex
+}
+
+var sessionCounter int64
+
 func main() {
 	fmt.Println("Hello, World!")
 	app := fiber.New()
+
+	app.Get("/ws", websocket.New(handleWebSocket))
 
 	app.Static("/scripts", "./static/public/scripts")
 	app.Static("/style", "./static/public/style")
@@ -68,13 +95,92 @@ func main() {
 	log.Fatal(app.Listen(":3000"))
 }
 
-type ComnadReturn struct {
-	Succeed bool   `json:"succeed"`
-	Output  string `json:"output"`
-	Error   string `json:"error"`
+func newTerminalSession() *TerminalSession {
+	id := atomic.AddInt64(&sessionCounter, 1)
+	return &TerminalSession{
+		ID:    id,
+		Dir:   "./",
+		CmdCh: make(chan string),
+		OutCh: make(chan string),
+	}
 }
-type ErrorReturn struct {
-	Error string `json:"error"`
+
+func (ts *TerminalSession) runShell() {
+	for cmdStr := range ts.CmdCh {
+		if strings.HasPrefix(cmdStr, "cd ") {
+			cmdStr += " && pwd"
+		}
+		cmd := exec.Command("bash", "-c", cmdStr)
+		cmd.Dir = ts.Dir
+
+		output, err := cmd.CombinedOutput()
+
+		if strings.HasPrefix(cmdStr, "cd ") {
+			if err == nil {
+				ts.Dir = strings.Trim(string(output), "\n")
+				ts.OutCh <- "Changed directory to " + ts.Dir
+				continue
+			}
+		}
+
+		if err != nil {
+			if string(output) != "" {
+				ts.OutCh <- string(output)
+			} else {
+				ts.OutCh <- "Error: " + err.Error()
+			}
+		} else {
+			ts.OutCh <- string(output)
+		}
+	}
+}
+
+func handleWebSocket(conn *websocket.Conn) {
+	session := newTerminalSession()
+	filters := []string{"vi", "sudo", "vim", "nano"}
+
+	go session.runShell()
+
+	defer func() {
+		conn.Close()
+		close(session.CmdCh)
+	}()
+
+	for {
+		mt, msg, err := conn.ReadMessage()
+		if err != nil {
+			log.Println("read:", err)
+			break
+		}
+
+		command := string(msg)
+		var output string
+
+		if contains(strings.Fields(command), filters) {
+			output = "command not allowed"
+		} else {
+			session.CmdCh <- command
+
+			output = <-session.OutCh
+		}
+
+		err = conn.WriteMessage(mt, []byte(output))
+		if err != nil {
+			log.Println("write:", err)
+			break
+		}
+	}
+}
+
+func contains(array []string, filters []string) bool {
+	for _, a := range array {
+		for _, b := range filters {
+			if a == b {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func HandleSave(c *fiber.Ctx) error {
@@ -245,11 +351,6 @@ func HandleGetTree(c *fiber.Ctx) error {
 	getTree(subdirs, tree, &idCounter{id: 0}, &wg)
 	wg.Wait()
 	return c.JSON(tree)
-}
-
-type idCounter struct {
-	id      int
-	idMutex sync.Mutex
 }
 
 func (i *idCounter) GetId() int {
