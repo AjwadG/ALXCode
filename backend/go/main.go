@@ -12,6 +12,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
+	"github.com/joho/godotenv"
 )
 
 type Todo struct {
@@ -66,6 +67,14 @@ var sessionCounter int64
 
 func main() {
 	fmt.Println("Hello, World!")
+
+	PORT := "3000"
+
+	if err := godotenv.Load(".env"); err == nil {
+		if port := os.Getenv("PORT"); port != "" {
+			PORT = port
+		}
+	}
 	app := fiber.New()
 
 	app.Get("/ws", websocket.New(handleWebSocket))
@@ -92,7 +101,7 @@ func main() {
 
 	})
 
-	log.Fatal(app.Listen(":3000"))
+	log.Fatal(app.Listen(":" + PORT))
 }
 
 func newTerminalSession() *TerminalSession {
