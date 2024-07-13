@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Folder from "./Folder";
 
+
 const initialStructure = {
   id: 1,
   name: "root",
@@ -157,6 +158,36 @@ function FileExplorer({ setNavFiles }) {
     setStructure(newStructure);
   };
 
+const createFile = (folderId) => {
+    const newFile = {
+      id: Date.now(),
+      name: `New File`,
+      isFolder: false,
+      content: "",
+    };
+
+    const addFileToFolder = (folder, folderId) => {
+      if (folder.id === folderId) {
+        return {
+          ...folder,
+          children: [newFile, ...folder.children],
+        };
+      }
+      return {
+        ...folder,
+        children: folder.children.map((child) => {
+          if (child.isFolder) {
+            return addFileToFolder(child, folderId);
+          }
+          return child;
+        }),
+      };
+    };
+
+    setStructure((prevStructure) => addFileToFolder(prevStructure, folderId));
+  };
+
+
   const deleteItem = (item) => {
     const deleteRecursively = (folder) => {
       if (!folder.isFolder) return;
@@ -178,6 +209,7 @@ function FileExplorer({ setNavFiles }) {
         setNavFiles={setNavFiles}
         onDelete={deleteItem}
         DND={DND}
+        onCreateFile={createFile}
       />
     </div>
   );

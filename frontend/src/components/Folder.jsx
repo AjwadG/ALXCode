@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { FaFolder, FaFolderOpen, FaTrash } from "react-icons/fa";
+import { FaFolder, FaFolderOpen, FaTrash, FaPlus } from "react-icons/fa";
 import File from "./File";
 import "./Explorer.css";
 
-function Folder({ folder, setNavFiles, onDelete, DND }) {
+function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
@@ -13,6 +13,11 @@ function Folder({ folder, setNavFiles, onDelete, DND }) {
   const handleDelete = (e) => {
     e.stopPropagation();
     onDelete(folder);
+  };
+
+  const handleCreateFile = (e) => {
+    e.stopPropagation();
+    onCreateFile(folder.id);
   };
 
   const dragFunctionality = folder.parent
@@ -51,11 +56,12 @@ function Folder({ folder, setNavFiles, onDelete, DND }) {
           />
         )}
         {DND.getFileInEdit() !== folder && folder.name}
-        <span className="ml-auto">
+        <span className="ml-auto flex flex-row-reverse items-center gap-2">
           <FaTrash
             className="text-red-500 cursor-pointer text-xs opacity-10 hover:opacity-100"
             onClick={handleDelete}
           />
+        <FaPlus className="text-green-500 cursor-pointer text-xs opacity-10 hover:opacity-100" onClick={handleCreateFile}/>
         </span>
       </div>
       {isOpen && (
@@ -68,6 +74,7 @@ function Folder({ folder, setNavFiles, onDelete, DND }) {
                 setNavFiles={setNavFiles}
                 onDelete={onDelete}
                 DND={DND}
+                onCreateFile={onCreateFile}
               />
             ) : (
               <File
@@ -76,6 +83,7 @@ function Folder({ folder, setNavFiles, onDelete, DND }) {
                 setNavFiles={setNavFiles}
                 onDelete={onDelete}
                 DND={DND}
+                onCreateFile={onCreateFile}
               />
             )
           )}
