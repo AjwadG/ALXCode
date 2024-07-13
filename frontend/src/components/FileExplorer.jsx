@@ -169,7 +169,7 @@ const createFile = (folderId) => {
       if (folder.id === folderId) {
         return {
           ...folder,
-          children: [...folder.children, newFile],
+          children: [newFile, ...folder.children],
         };
       }
       return {
