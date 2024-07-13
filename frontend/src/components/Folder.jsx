@@ -26,8 +26,9 @@ function Folder({ folder, setNavFiles, onDelete, DND }) {
     <div>
       <div
         className="pl-5 p-1 flex items-center cursor-pointer text-slate-500 text-sm bg-transform"
-        onClick={toggleOpen}
+        onClick={() => DND.getFileInEdit() !== folder && toggleOpen()}
         {...dragFunctionality}
+        onDoubleClick={() => DND.handleDoubleClick(folder)}
         onDrop={() => DND.handleDrop(folder)}
         onDragOver={DND.handleDragOver}
       >
@@ -36,7 +37,20 @@ function Folder({ folder, setNavFiles, onDelete, DND }) {
         ) : (
           <FaFolder className="mr-1 text-amber-300" />
         )}{" "}
-        {folder.name}
+        {DND.getFileInEdit() === folder && (
+          <input
+            type="text"
+            defaultValue={folder.name}
+            autoFocus
+            onBlur={(e) => DND.handleFileEdit(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                DND.handleFileEdit(e.target.value);
+              }
+            }}
+          />
+        )}
+        {DND.getFileInEdit() !== folder && folder.name}
         <span className="ml-auto">
           <FaTrash
             className="text-red-500 cursor-pointer text-xs opacity-10 hover:opacity-100"

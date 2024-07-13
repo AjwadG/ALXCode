@@ -15,7 +15,11 @@ function App() {
   const [activeFile, setActiveFile] = useState(null);
   const [fileContent, setFileContent] = useState("");
 
-  const handleNavFilesChange = (file, isAdd) => {
+  const handleNavFilesChange = (file, isAdd, refresh) => {
+    if (refresh) {
+      setOpenFiles([...openFiles]);
+      return;
+    }
     if (isAdd) {
       if (!openFiles.includes(file)) {
         setOpenFiles([...openFiles, file]);
