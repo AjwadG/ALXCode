@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Folder from "./Folder";
 
+
 const initialStructure = {
   id: 1,
   name: "root",

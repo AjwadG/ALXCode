@@ -35,3 +35,34 @@
     transform: translateX(-50%);
 }
 
+
+
+/* Resizing */
+
+.custom-handle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    cursor: ew-resize;
+    background: transparent;
+}
+
+.custom-handle:hover {
+    background: rgba(0, 204, 255, 0.2);
+}
+
+.custom-vertical-handle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    cursor: ns-resize;
+    background: transparent;
+}
+
+.custom-vertical-handle:hover {
+    background: rgba(0, 204, 255, 0.2);
+}
