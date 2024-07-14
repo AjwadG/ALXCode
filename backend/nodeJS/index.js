@@ -110,8 +110,8 @@ app.post("/api/save", async (req, res) => {
   res.json(output);
 });
 
-server.listen(process.env.PORT, () => {
-  console.log(`Server started on port ${process.env.PORT}`);
+server.listen(process.env.PORT || 3000, () => {
+  console.log(`Server started on port ${process.env.PORT || 3000}`);
 });
 
 io.on("connection", (socket) => {
