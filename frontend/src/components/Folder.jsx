@@ -4,7 +4,14 @@ import { VscNewFile, VscNewFolder } from "react-icons/vsc";
 import File from "./File";
 import "./Explorer.css";
 
-function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile, onCreateFolder }) {
+function Folder({
+  folder,
+  setNavFiles,
+  onDelete,
+  DND,
+  onCreateFile,
+  onCreateFolder,
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
@@ -24,7 +31,7 @@ function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile, onCreateFold
   const handleCreateFolder = (e) => {
     e.stopPropagation();
     onCreateFolder(folder.id);
-  }
+  };
 
   const dragFunctionality = folder.parent
     ? {
@@ -68,14 +75,20 @@ function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile, onCreateFold
             className="text-red-500 cursor-pointer text-xs opacity-10 hover:opacity-100"
             onClick={handleDelete}
           />
-        <VscNewFile className="text-green-500 cursor-pointer text-xs opacity-25 hover:opacity-100" onClick={handleCreateFile}/>
-        <VscNewFolder className="text-blue-500 cursor-pointer text-xs opacity-25 hover:opacity-100" onClick={handleCreateFolder}/>
+          <VscNewFile
+            className="text-green-500 cursor-pointer text-xs opacity-25 hover:opacity-100"
+            onClick={handleCreateFile}
+          />
+          <VscNewFolder
+            className="text-blue-500 cursor-pointer text-xs opacity-25 hover:opacity-100"
+            onClick={handleCreateFolder}
+          />
         </span>
       </div>
       {isOpen && (
         <div className="folder-contents pl-5">
-          {folder.children.map((item) =>
-            item.isFolder ? (
+          {folder.childs.map((item) =>
+            item.dir ? (
               <Folder
                 key={item.id}
                 folder={item}

@@ -1,88 +1,106 @@
 import { useState } from "react";
 import Folder from "./Folder";
+import axios from "axios";
 
+const BASE_URL = "http://localhost:3000";
+const curretnPath = "/home/ajwadg/ajwad/alx/ALXCode"; // edit this
+const initialStructure = await getStructure(curretnPath);
 
-const initialStructure = {
-  id: 1,
-  name: "root",
-  isFolder: true,
-  children: [
-    {
-      id: 2,
-      name: "src",
-      isFolder: true,
-      children: [
-        {
-          id: 4,
-          name: "index.js",
-          isFolder: false,
-          content: "console.log('Hello from index!')",
-        },
-        {
-          id: 7,
-          name: "components",
-          isFolder: true,
-          children: [
-            {
-              id: 8,
-              name: "FileExplorer.jsx",
-              isFolder: false,
-              content: "console.log('Hello from FileExplorer!')",
-            },
-            {
-              id: 9,
-              name: "Folder.jsx",
-              isFolder: false,
-              content: "console.log('Hello from Folder!')",
-            },
-          ],
-        },
-        {
-          id: 6,
-          name: "App.js",
-          isFolder: false,
-          content: "console.log('Hello from App!')",
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: "public",
-      isFolder: true,
-      children: [
-        {
-          id: 5,
-          name: "index.html",
-          isFolder: false,
-          content: "<h1>Hello World!</h1>",
-        },
-      ],
-    },
-  ],
-};
-
-initialStructure.children = initialStructure.children.map((node) => {
-  node.parent = initialStructure;
-  if (node.isFolder) {
-    node.children = node.children.map((child) => {
-      child.parent = node;
-      if (child.isFolder) {
-        child.children = child.children.map((grandchild) => {
-          grandchild.parent = child;
-          if (grandchild.isFolder) {
-            grandchild.children = grandchild.children.map((greatgrandchild) => {
-              greatgrandchild.parent = grandchild;
-              return greatgrandchild;
-            });
-          }
-          return grandchild;
-        });
-      }
-      return child;
+async function getStructure(path) {
+  let structure;
+  try {
+    const response = await axios.put(`${BASE_URL}/api/getTree`, {
+      path,
     });
+    structure = response.data;
+    function buildChilds(parent) {
+      parent.childs = parent.childs.map((child) => {
+        child.parent = parent;
+        if (child.dir) {
+          child.childs = buildChilds(child);
+        }
+        return child;
+      });
+      return parent.childs;
+    }
+
+    structure.childs = structure.childs.map((node) => {
+      node.parent = structure;
+      if (node.dir) {
+        node.childs = buildChilds(node);
+      }
+      return node;
+    });
+  } catch (error) {
+    structure = {
+      id: 0,
+      name: "NOT FOUND",
+      dir: true,
+      childs: [],
+    };
+    console.error(error);
   }
-  return node;
-});
+  return structure;
+}
+
+// {
+//   id: 1,
+//   name: "root",
+//   dir: true,
+//   childs: [
+//     {
+//       id: 2,
+//       name: "src",
+//       dir: true,
+//       childs: [
+//         {
+//           id: 4,
+//           name: "index.js",
+//           dir: false,
+//           content: "console.log('Hello from index!')",
+//         },
+//         {
+//           id: 7,
+//           name: "components",
+//           dir: true,
+//           childs: [
+//             {
+//               id: 8,
+//               name: "FileExplorer.jsx",
+//               dir: false,
+//               content: "console.log('Hello from FileExplorer!')",
+//             },
+//             {
+//               id: 9,
+//               name: "Folder.jsx",
+//               dir: false,
+//               content: "console.log('Hello from Folder!')",
+//             },
+//           ],
+//         },
+//         {
+//           id: 6,
+//           name: "App.js",
+//           dir: false,
+//           content: "console.log('Hello from App!')",
+//         },
+//       ],
+//     },
+//     {
+//       id: 3,
+//       name: "public",
+//       dir: true,
+//       childs: [
+//         {
+//           id: 5,
+//           name: "index.html",
+//           dir: false,
+//           content: "<h1>Hello World!</h1>",
+//         },
+//       ],
+//     },
+//   ],
+// };
 
 function FileExplorer({ setNavFiles }) {
   const [structure, setStructure] = useState(initialStructure);
@@ -91,7 +109,7 @@ function FileExplorer({ setNavFiles }) {
   const [draggedFile, setDraggedFile] = useState(null);
 
   function checkTree(nodeToCheck, targetParent) {
-    if (!targetParent.isFolder) return true;
+    if (!targetParent.dir) return true;
     let parent = nodeToCheck.parent;
 
     while (parent) {
@@ -107,13 +125,34 @@ function FileExplorer({ setNavFiles }) {
     static getFileInEdit() {
       return fileInEdit;
     }
-    static handleFileEdit(newName) {
-      if (fileInEdit) {
-        fileInEdit.name = newName;
-        setStructure(structure);
-        setFileInEdit(null);
+    static async handleFileEdit(newName) {
+      if (
+        fileInEdit &&
+        newName !== "" &&
+        fileInEdit.name !== newName &&
+        fileInEdit.parent &&
+        fileInEdit.parent.childs.filter(
+          (child) => child.name === newName && child.id !== fileInEdit.id
+        ).length === 0
+      ) {
+        try {
+          const response = await axios.put(`${BASE_URL}/api/rename`, {
+            oldPath: fileInEdit.path,
+            newName: newName,
+          });
+          if (response.data.succeed) {
+            fileInEdit.name = newName;
+            fileInEdit.path = fileInEdit.parent.path + "/" + newName;
+            DND.fixChilds(fileInEdit);
+          } else {
+            alert(response.data.output);
+          }
+        } catch (error) {
+          console.error(error);
+        }
         setNavFiles(null, null, true);
       }
+      setFileInEdit(null);
     }
 
     static handleDoubleClick(file) {
@@ -123,19 +162,44 @@ function FileExplorer({ setNavFiles }) {
       setDraggedFile(file);
     }
 
-    static handleDrop(targetFolder) {
+    static fixChilds(parent) {
+      const parentPath = parent.path;
+      parent.childs = parent.childs.map((child) => {
+        child.path = parentPath + "/" + child.name;
+        if (child.dir) {
+          DND.fixChilds(child);
+        }
+        return child;
+      });
+    }
+
+    static async handleDrop(targetFolder) {
       if (
         draggedFile &&
         targetFolder !== draggedFile.parent &&
-        targetFolder.isFolder &&
+        targetFolder.dir &&
         checkTree(targetFolder, draggedFile)
       ) {
-        draggedFile.parent.children = draggedFile.parent.children.filter(
-          (child) => child.id !== draggedFile.id
-        );
-        draggedFile.parent = targetFolder;
-        targetFolder.children.push(draggedFile);
-        setStructure(structure);
+        try {
+          const response = await axios.put(`${BASE_URL}/api/move`, {
+            oldPath: draggedFile.path,
+            newPath: targetFolder.path,
+          });
+          if (response.data.succeed) {
+            draggedFile.parent.childs = draggedFile.parent.childs.filter(
+              (child) => child.id !== draggedFile.id
+            );
+            draggedFile.parent = targetFolder;
+            draggedFile.path = targetFolder.path + "/" + draggedFile.name;
+            DND.fixChilds(draggedFile);
+            targetFolder.childs.push(draggedFile);
+            setStructure(structure);
+          } else {
+            alert(response.data.output);
+          }
+        } catch (error) {
+          console.error(error);
+        }
         setDraggedFile(null);
       }
     }
@@ -147,10 +211,10 @@ function FileExplorer({ setNavFiles }) {
 
   const deleteFile = (file) => {
     const deleteRecursively = (folder) => {
-      if (!folder.isFolder) return;
+      if (!folder.dir) return;
 
-      folder.children = folder.children.filter((child) => child.id !== file.id);
-      folder.children.forEach(deleteRecursively);
+      folder.childs = folder.childs.filter((child) => child.id !== file.id);
+      folder.childs.forEach(deleteRecursively);
     };
 
     const newStructure = { ...structure };
@@ -162,20 +226,20 @@ function FileExplorer({ setNavFiles }) {
     const newFile = {
       id: Date.now(),
       name: `New File`,
-      isFolder: false,
+      dir: false,
       content: "",
     };
     const addFileToFolder = (folder, folderId) => {
       if (folder.id === folderId) {
         return {
           ...folder,
-          children: [newFile, ...folder.children],
+          childs: [newFile, ...folder.childs],
         };
       }
       return {
         ...folder,
-        children: folder.children.map((child) => {
-          if (child.isFolder) {
+        childs: folder.childs.map((child) => {
+          if (child.dir) {
             return addFileToFolder(child, folderId);
           }
           return child;
@@ -190,21 +254,21 @@ function FileExplorer({ setNavFiles }) {
     const newFolder = {
       id: Date.now(),
       name: `New Folder`,
-      isFolder: true,
-      children: [],
+      dir: true,
+      childs: [],
     };
 
     const addFolderToFolder = (folder, folderId) => {
       if (folder.id === folderId) {
         return {
           ...folder,
-          children: [newFolder, ...folder.children],
+          childs: [newFolder, ...folder.childs],
         };
       }
       return {
         ...folder,
-        children: folder.children.map((child) => {
-          if (child.isFolder) {
+        childs: folder.childs.map((child) => {
+          if (child.dir) {
             return addFolderToFolder(child, folderId);
           }
           return child;
@@ -215,19 +279,32 @@ function FileExplorer({ setNavFiles }) {
     setStructure((prevStructure) => addFolderToFolder(prevStructure, folderId));
   };
 
-
-  const deleteItem = (item) => {
+  const deleteItem = async (item) => {
     const deleteRecursively = (folder) => {
-      if (!folder.isFolder) return;
+      if (!folder.dir) return;
 
-      folder.children = folder.children.filter((child) => child.id !== item.id);
-      folder.children.forEach(deleteRecursively);
+      folder.childs = folder.childs.filter((child) => child.id !== item.id);
+      folder.childs.forEach(deleteRecursively);
     };
-
-    const newStructure = { ...structure };
-    deleteRecursively(newStructure);
-    setStructure(newStructure);
-    setNavFiles(item);
+    try {
+      const response = await axios.delete(`${BASE_URL}/api/delete`, {
+        data: { path: item.path },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.data.succeed) {
+        const newStructure = { ...structure };
+        deleteRecursively(newStructure);
+        setStructure(newStructure);
+        setNavFiles(item);
+      } else {
+        alert(response.data.output);
+      }
+    } catch (error) {
+      console.error(error);
+      console.error(error.response.data);
+    }
   };
 
   return (

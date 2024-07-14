@@ -11,6 +11,7 @@ import (
 	"sync/atomic"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/websocket/v2"
 	"github.com/joho/godotenv"
 )
@@ -77,6 +78,10 @@ func main() {
 	}
 	app := fiber.New()
 
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+	}))
+
 	app.Get("/ws", websocket.New(handleWebSocket))
 
 	app.Static("/scripts", "./static/public/scripts")
@@ -91,8 +96,8 @@ func main() {
 
 	app.Route("/api", func(api fiber.Router) {
 
-		api.Get("/getTree", HandleGetTree)
-		api.Get("/readFile", HandleReadFile)
+		api.Put("/getTree", HandleGetTree)
+		api.Put("/readFile", HandleReadFile)
 		api.Put("/move", HandleMove)
 		api.Put("/rename", HandleRename)
 		api.Delete("/delete", HandleDelete)
@@ -277,7 +282,6 @@ func HandleRename(c *fiber.Ctx) error {
 	newPath := strings.Join(strings.Split(body.OldPath, "/")[:len(strings.
 		Split(body.OldPath, "/"))-1], "/") + "/" + body.NewName
 
-	fmt.Println(newPath)
 	output := OneCommand("mv", body.OldPath, newPath)
 	return c.JSON(output)
 }
@@ -321,6 +325,7 @@ func HandleGetTree(c *fiber.Ctx) error {
 		return err
 	}
 	if body.Path == "" {
+		fmt.Println(body.Path, "error body", body)
 		return c.Status(400).JSON(&ErrorReturn{
 			Error: "path is required",
 		})
@@ -404,7 +409,7 @@ func getTree(files []fs.DirEntry, parent *FileType, id *idCounter, prevWG *sync.
 
 func OneCommand(command string, args ...string) ComnadReturn {
 	cmd := exec.Command(command, args...)
-	output, err := cmd.Output()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return ComnadReturn{
 			Succeed: false,

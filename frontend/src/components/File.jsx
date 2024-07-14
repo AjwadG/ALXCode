@@ -7,7 +7,6 @@ const FileStyle = {
 
 function File({ file, setNavFiles, onDelete, DND }) {
   const handleDelete = (e) => {
-    console.log(file);
     e.stopPropagation();
     onDelete(file);
   };
@@ -28,6 +27,7 @@ function File({ file, setNavFiles, onDelete, DND }) {
       <FaFile className="text-sky-500 mr-1 my-1" />
       {DND.getFileInEdit() === file && (
         <input
+          className="border-none outline-none bg-main-transparent text-slate-500"
           type="text"
           defaultValue={file.name}
           autoFocus

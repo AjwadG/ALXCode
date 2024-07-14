@@ -4,6 +4,9 @@ import Explorer from "./Explorer";
 import FileNavigation from "./FileNavigation";
 import CodeBlock from "./CodeBlock";
 import Footer from "./Footer";
+import axios from "axios";
+
+const BASE_URL = "http://localhost:3000";
 
 const fixOverflow = {
   height: "calc(100% - 48px)",
@@ -16,12 +19,24 @@ function App() {
   const [activeFile, setActiveFile] = useState(null);
   const [fileContent, setFileContent] = useState("");
 
-  const handleNavFilesChange = (file, isAdd, refresh) => {
+  const handleNavFilesChange = async (file, isAdd, refresh) => {
     if (refresh) {
       setOpenFiles([...openFiles]);
       return;
     }
     if (isAdd) {
+      try {
+        const response = await axios.put(`${BASE_URL}/api/readFile`, {
+          path: file.path,
+        });
+        if (response.data.succeed) {
+          file.content = response.data.output;
+        } else {
+          alert(response.data.output);
+        }
+      } catch (err) {
+        console.error(err);
+      }
       if (!openFiles.includes(file)) {
         setOpenFiles([...openFiles, file]);
       }
@@ -81,3 +96,4 @@ function App() {
 }
 
 export default App;
+export { BASE_URL };
