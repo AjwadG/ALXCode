@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { FaFolder, FaFolderOpen, FaTrash, FaPlus } from "react-icons/fa";
+import { VscNewFile, VscNewFolder } from "react-icons/vsc";
 import File from "./File";
 import "./Explorer.css";
 
-function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile }) {
+function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile, onCreateFolder }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
@@ -20,6 +21,11 @@ function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile }) {
     onCreateFile(folder.id);
   };
 
+  const handleCreateFolder = (e) => {
+    e.stopPropagation();
+    onCreateFolder(folder.id);
+  }
+
   const dragFunctionality = folder.parent
     ? {
         draggable: true,
@@ -30,7 +36,7 @@ function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile }) {
   return (
     <div>
       <div
-        className="pl-5 p-1 flex items-center cursor-pointer text-slate-500 text-sm bg-transform"
+        className="pl-5 p-1 flex items-center gap-2 cursor-pointer text-slate-500 text-sm bg-transform"
         onClick={() => DND.getFileInEdit() !== folder && toggleOpen()}
         {...dragFunctionality}
         onDoubleClick={() => DND.handleDoubleClick(folder)}
@@ -44,6 +50,7 @@ function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile }) {
         )}{" "}
         {DND.getFileInEdit() === folder && (
           <input
+            className="border-none outline-none bg-main-transparent text-slate-500"
             type="text"
             defaultValue={folder.name}
             autoFocus
@@ -61,7 +68,8 @@ function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile }) {
             className="text-red-500 cursor-pointer text-xs opacity-10 hover:opacity-100"
             onClick={handleDelete}
           />
-        <FaPlus className="text-green-500 cursor-pointer text-xs opacity-10 hover:opacity-100" onClick={handleCreateFile}/>
+        <VscNewFile className="text-green-500 cursor-pointer text-xs opacity-25 hover:opacity-100" onClick={handleCreateFile}/>
+        <VscNewFolder className="text-blue-500 cursor-pointer text-xs opacity-25 hover:opacity-100" onClick={handleCreateFolder}/>
         </span>
       </div>
       {isOpen && (
@@ -75,6 +83,7 @@ function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile }) {
                 onDelete={onDelete}
                 DND={DND}
                 onCreateFile={onCreateFile}
+                onCreateFolder={onCreateFolder}
               />
             ) : (
               <File
@@ -84,6 +93,7 @@ function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile }) {
                 onDelete={onDelete}
                 DND={DND}
                 onCreateFile={onCreateFile}
+                onCreateFolder={onCreateFolder}
               />
             )
           )}

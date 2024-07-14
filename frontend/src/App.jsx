@@ -10,6 +10,7 @@ const fixOverflow = {
 };
 function App() {
   const [isTerminalVisible, setIsTerminalVisible] = useState(false);
+  const [isOutputVisible, setIsOutputVisible] = useState(false);
 
   const [openFiles, setOpenFiles] = useState([]);
   const [activeFile, setActiveFile] = useState(null);
@@ -46,6 +47,10 @@ function App() {
     setIsTerminalVisible(!isTerminalVisible);
   };
 
+  const handleToggleOutput = () => {
+    setIsOutputVisible(!isOutputVisible);
+  };
+
   return (
     <div className="w-full h-screen bg-blue-950">
       <TopBar />
@@ -59,6 +64,7 @@ function App() {
           />
           <CodeBlock
             isTerminalVisible={isTerminalVisible}
+            isOutputVisible={isOutputVisible}
             activeFile={activeFile}
             fileContent={fileContent}
           />
@@ -67,6 +73,8 @@ function App() {
       <Footer
         handleToggleTerminal={handleToggleTerminal}
         isTerminalVisible={isTerminalVisible}
+        isOutputVisible={isOutputVisible}
+        handleToggleOutput={handleToggleOutput}
       />
     </div>
   );

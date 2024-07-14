@@ -158,14 +158,13 @@ function FileExplorer({ setNavFiles }) {
     setStructure(newStructure);
   };
 
-const createFile = (folderId) => {
+  const createFile = (folderId) => {
     const newFile = {
       id: Date.now(),
       name: `New File`,
       isFolder: false,
       content: "",
     };
-
     const addFileToFolder = (folder, folderId) => {
       if (folder.id === folderId) {
         return {
@@ -185,6 +184,35 @@ const createFile = (folderId) => {
     };
 
     setStructure((prevStructure) => addFileToFolder(prevStructure, folderId));
+  };
+
+  const createFolder = (folderId) => {
+    const newFolder = {
+      id: Date.now(),
+      name: `New Folder`,
+      isFolder: true,
+      children: [],
+    };
+
+    const addFolderToFolder = (folder, folderId) => {
+      if (folder.id === folderId) {
+        return {
+          ...folder,
+          children: [newFolder, ...folder.children],
+        };
+      }
+      return {
+        ...folder,
+        children: folder.children.map((child) => {
+          if (child.isFolder) {
+            return addFolderToFolder(child, folderId);
+          }
+          return child;
+        }),
+      };
+    };
+
+    setStructure((prevStructure) => addFolderToFolder(prevStructure, folderId));
   };
 
 
@@ -210,6 +238,7 @@ const createFile = (folderId) => {
         onDelete={deleteItem}
         DND={DND}
         onCreateFile={createFile}
+        onCreateFolder={createFolder}
       />
     </div>
   );
