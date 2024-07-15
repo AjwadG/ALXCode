@@ -1,4 +1,4 @@
-import { VscRunAll } from "react-icons/vsc";
+import { GiMoebiusTriangle } from "react-icons/gi";
 import alxLogo from "./assets/alx-logo-white.png"
 
 
@@ -26,7 +26,7 @@ function TopBar() {
         <div className="w-full h-12 flex-container items-center justify-between bg-main  py-5 px-1">
             <img src={alxLogo} style={logoStyle} className=""/>
             <input type="text" className="" style={InputStyle} placeholder="Find File"/>
-            <div className="cursor-pointer"><VscRunAll className="text-2xl mr-4 text-green-500 cursor-pointer opacity-25 hover:opacity-100" /></div>
+            <div className="cursor-pointer"><GiMoebiusTriangle className="text-2xl mr-4 text-green-500 cursor-pointer opacity-25 hover:opacity-100" /></div>
         </div>
     )
 }
