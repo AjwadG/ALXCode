@@ -132,7 +132,7 @@ func (ts *TerminalSession) runShell() {
 		if strings.HasPrefix(cmdStr, "cd ") {
 			if err == nil {
 				ts.Dir = strings.Trim(string(output), "\n")
-				ts.OutCh <- "Changed directory to " + ts.Dir
+				ts.OutCh <- "Changed directory to " + ts.Dir + "\n"
 				continue
 			}
 		}
@@ -151,7 +151,7 @@ func (ts *TerminalSession) runShell() {
 
 func handleWebSocket(conn *websocket.Conn) {
 	session := newTerminalSession()
-	filters := []string{"vi", "sudo", "vim", "nano"}
+	filters := []string{"vi", "sudo", "vim", "nano", "clear", "exit"}
 
 	go session.runShell()
 
@@ -159,6 +159,7 @@ func handleWebSocket(conn *websocket.Conn) {
 		conn.Close()
 		close(session.CmdCh)
 	}()
+	fmt.Println("new session", session.ID)
 
 	for {
 		mt, msg, err := conn.ReadMessage()
@@ -171,7 +172,7 @@ func handleWebSocket(conn *websocket.Conn) {
 		var output string
 
 		if contains(strings.Fields(command), filters) {
-			output = "command not allowed"
+			output = "command not allowed\n"
 		} else {
 			session.CmdCh <- command
 

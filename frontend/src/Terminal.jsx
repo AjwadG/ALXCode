@@ -1,13 +1,13 @@
-import React,  { useState } from "react";
+import React, { useState } from "react";
 import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css";
 import "./assets/css/index.css";
 
+const ws = new WebSocket("ws://localhost:3000/ws");
+
 function Terminal() {
   const [inputValue, setInputValue] = useState("");
   const [output, setOutput] = useState("");
-
-  const ws = new WebSocket("ws://localhost:3000/ws");
 
   ws.onopen = function () {
     appendOutput("Connected to the server.\n");
@@ -34,7 +34,6 @@ function Terminal() {
     }
   }
 
-  
   function appendOutput(message) {
     setOutput((prevOutput) => prevOutput + message);
   }
@@ -50,10 +49,11 @@ function Terminal() {
       handle={<span className="custom-vertical-handle" />}
       resizeHandles={["n"]}
     >
-            <div>
+      <div>
         <pre>{output}</pre>
         <div>
-          <input className="w-full bg-transparent p-1 text-white outline-none text-sm"
+          <input
+            className="w-full bg-transparent p-1 text-white outline-none text-sm"
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -63,7 +63,6 @@ function Terminal() {
               }
             }}
           />
-          <button onClick={sendCommand}>Send</button>
         </div>
       </div>
     </ResizableBox>

@@ -4,14 +4,7 @@ import { VscNewFile, VscNewFolder } from "react-icons/vsc";
 import File from "./File";
 import "./Explorer.css";
 
-function Folder({
-  folder,
-  setNavFiles,
-  onDelete,
-  DND,
-  onCreateFile,
-  onCreateFolder,
-}) {
+function Folder({ folder, setNavFiles, onDelete, DND }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
@@ -25,12 +18,12 @@ function Folder({
 
   const handleCreateFile = (e) => {
     e.stopPropagation();
-    onCreateFile(folder.id);
+    DND.newFileCreation(folder, false);
   };
 
   const handleCreateFolder = (e) => {
     e.stopPropagation();
-    onCreateFolder(folder.id);
+    DND.newFileCreation(folder, true);
   };
 
   const dragFunctionality = folder.parent
@@ -39,6 +32,17 @@ function Folder({
         onDragStart: () => DND.handleDragStart(folder),
       }
     : { draggable: false };
+
+  function GetName() {
+    if (DND.getFileInEdit() === folder) {
+      return "";
+    }
+    const fileCreation = DND.getFileCreation();
+    if (fileCreation.file === folder) {
+      return fileCreation.isDir ? "New Folder" : "New File";
+    }
+    return folder.name;
+  }
 
   return (
     <div>
@@ -55,7 +59,7 @@ function Folder({
         ) : (
           <FaFolder className="mr-1 text-amber-300" />
         )}{" "}
-        {DND.getFileInEdit() === folder && (
+        {DND.getFileInEdit() === folder && !DND.getFileCreation().file && (
           <input
             className="border-none outline-none bg-main-transparent text-slate-500"
             type="text"
@@ -69,7 +73,20 @@ function Folder({
             }}
           />
         )}
-        {DND.getFileInEdit() !== folder && folder.name}
+        {DND.getFileInEdit() !== folder && GetName()}
+        {DND.getFileCreation().file === folder && (
+          <input
+            className="border-none outline-none bg-main-transparent text-slate-500"
+            type="text"
+            autoFocus
+            onBlur={(e) => DND.handleFileCreation(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                DND.handleFileCreation(e.target.value);
+              }
+            }}
+          />
+        )}
         <span className="ml-auto flex flex-row-reverse items-center gap-2">
           <FaTrash
             className="text-red-500 cursor-pointer text-xs opacity-10 hover:opacity-100"
@@ -95,8 +112,6 @@ function Folder({
                 setNavFiles={setNavFiles}
                 onDelete={onDelete}
                 DND={DND}
-                onCreateFile={onCreateFile}
-                onCreateFolder={onCreateFolder}
               />
             ) : (
               <File
@@ -105,8 +120,6 @@ function Folder({
                 setNavFiles={setNavFiles}
                 onDelete={onDelete}
                 DND={DND}
-                onCreateFile={onCreateFile}
-                onCreateFolder={onCreateFolder}
               />
             )
           )}

@@ -3,7 +3,7 @@ import Folder from "./Folder";
 import axios from "axios";
 
 const BASE_URL = "http://localhost:3000";
-const curretnPath = "/home/coder/github/projects/ALXCode"; // edit this
+const curretnPath = "/home/ajwadg/ajwad/alx/ALXCode"; // edit this
 const initialStructure = await getStructure(curretnPath);
 
 async function getStructure(path) {
@@ -43,68 +43,10 @@ async function getStructure(path) {
   return structure;
 }
 
-// {
-//   id: 1,
-//   name: "root",
-//   dir: true,
-//   childs: [
-//     {
-//       id: 2,
-//       name: "src",
-//       dir: true,
-//       childs: [
-//         {
-//           id: 4,
-//           name: "index.js",
-//           dir: false,
-//           content: "console.log('Hello from index!')",
-//         },
-//         {
-//           id: 7,
-//           name: "components",
-//           dir: true,
-//           childs: [
-//             {
-//               id: 8,
-//               name: "FileExplorer.jsx",
-//               dir: false,
-//               content: "console.log('Hello from FileExplorer!')",
-//             },
-//             {
-//               id: 9,
-//               name: "Folder.jsx",
-//               dir: false,
-//               content: "console.log('Hello from Folder!')",
-//             },
-//           ],
-//         },
-//         {
-//           id: 6,
-//           name: "App.js",
-//           dir: false,
-//           content: "console.log('Hello from App!')",
-//         },
-//       ],
-//     },
-//     {
-//       id: 3,
-//       name: "public",
-//       dir: true,
-//       childs: [
-//         {
-//           id: 5,
-//           name: "index.html",
-//           dir: false,
-//           content: "<h1>Hello World!</h1>",
-//         },
-//       ],
-//     },
-//   ],
-// };
-
 function FileExplorer({ setNavFiles }) {
   const [structure, setStructure] = useState(initialStructure);
   const [fileInEdit, setFileInEdit] = useState(null);
+  const [fileInCreation, setFileInCreation] = useState(null);
 
   const [draggedFile, setDraggedFile] = useState(null);
 
@@ -122,6 +64,48 @@ function FileExplorer({ setNavFiles }) {
   }
 
   class DND {
+    static getFileCreation() {
+      if (fileInCreation) {
+        return fileInCreation;
+      }
+      return {};
+    }
+    static newFileCreation(file, isDir) {
+      setFileInCreation({ file, isDir });
+    }
+
+    static async handleFileCreation(newName) {
+      const { file: parent, isDir } = fileInCreation;
+      if (
+        parent &&
+        newName !== "" &&
+        parent.childs.filter((child) => child.name === newName).length === 0
+      ) {
+        try {
+          const response = await axios.post(`${BASE_URL}/api/create`, {
+            path: parent.path,
+            fileName: newName,
+            isDir: isDir,
+          });
+          if (response.data.succeed) {
+            parent.childs.push({
+              id: Date.now(),
+              name: newName,
+              path: parent.path + "/" + newName,
+              dir: isDir,
+              parent: parent,
+              childs: [],
+            });
+          } else {
+            alert(response.data.output);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+        setStructure(structure);
+      }
+      setFileInCreation(null);
+    }
     static getFileInEdit() {
       return fileInEdit;
     }
@@ -209,76 +193,6 @@ function FileExplorer({ setNavFiles }) {
     }
   }
 
-  const deleteFile = (file) => {
-    const deleteRecursively = (folder) => {
-      if (!folder.dir) return;
-
-      folder.childs = folder.childs.filter((child) => child.id !== file.id);
-      folder.childs.forEach(deleteRecursively);
-    };
-
-    const newStructure = { ...structure };
-    deleteRecursively(newStructure);
-    setStructure(newStructure);
-  };
-
-  const createFile = (folderId) => {
-    const newFile = {
-      id: Date.now(),
-      name: `New File`,
-      dir: false,
-      content: "",
-    };
-    const addFileToFolder = (folder, folderId) => {
-      if (folder.id === folderId) {
-        return {
-          ...folder,
-          childs: [newFile, ...folder.childs],
-        };
-      }
-      return {
-        ...folder,
-        childs: folder.childs.map((child) => {
-          if (child.dir) {
-            return addFileToFolder(child, folderId);
-          }
-          return child;
-        }),
-      };
-    };
-
-    setStructure((prevStructure) => addFileToFolder(prevStructure, folderId));
-  };
-
-  const createFolder = (folderId) => {
-    const newFolder = {
-      id: Date.now(),
-      name: `New Folder`,
-      dir: true,
-      childs: [],
-    };
-
-    const addFolderToFolder = (folder, folderId) => {
-      if (folder.id === folderId) {
-        return {
-          ...folder,
-          childs: [newFolder, ...folder.childs],
-        };
-      }
-      return {
-        ...folder,
-        childs: folder.childs.map((child) => {
-          if (child.dir) {
-            return addFolderToFolder(child, folderId);
-          }
-          return child;
-        }),
-      };
-    };
-
-    setStructure((prevStructure) => addFolderToFolder(prevStructure, folderId));
-  };
-
   const deleteItem = async (item) => {
     const deleteRecursively = (folder) => {
       if (!folder.dir) return;
@@ -314,8 +228,6 @@ function FileExplorer({ setNavFiles }) {
         setNavFiles={setNavFiles}
         onDelete={deleteItem}
         DND={DND}
-        onCreateFile={createFile}
-        onCreateFolder={createFolder}
       />
     </div>
   );
