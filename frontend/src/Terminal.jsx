@@ -1,3 +1,4 @@
+import { FaTerminal } from "react-icons/fa";
 import React, { useState, useEffect, useRef } from "react";
 import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css";
@@ -60,7 +61,7 @@ function Terminal() {
       <div ref={terminalRef} className="terminal-content overflow-auto max-h-full">
         <pre className="output">{output}</pre>
         <div className="flex justify-center items-center mt-2">
-          <span className="prompt">$</span>
+          <span className="prompt mr-2"><FaTerminal /></span>
           <input
             className="w-full bg-transparent p-1 text-white outline-none text-sm"
             type="text"
