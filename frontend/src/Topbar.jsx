@@ -1,4 +1,6 @@
+import { VscRunAll } from "react-icons/vsc";
 import alxLogo from "./assets/alx-logo-white.png"
+
 
 const logoStyle = {
     width: "55px",
@@ -15,11 +17,16 @@ const InputStyle = {
     borderRadius: "5px",
 
 }
+
+const RunButton = {
+    color: "green",
+}
 function TopBar() {
     return (
-        <div className="w-full h-12 flex-container items-center bg-main  py-5 px-1">
-            <img src={alxLogo} style={logoStyle} className="i-left"/>
-            <input type="text" className="i-center" style={InputStyle} placeholder="Find File"/>
+        <div className="w-full h-12 flex-container items-center justify-between bg-main  py-5 px-1">
+            <img src={alxLogo} style={logoStyle} className=""/>
+            <input type="text" className="" style={InputStyle} placeholder="Find File"/>
+            <div className="cursor-pointer"><VscRunAll className="text-2xl mr-4 text-green-500 cursor-pointer opacity-25 hover:opacity-100" /></div>
         </div>
     )
 }

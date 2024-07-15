@@ -13,7 +13,7 @@ function File({ file, setNavFiles, onDelete, DND }) {
 
   return (
     <div
-      className="file p-1 text-slate-500 cursor-pointer flex items-center bg-transform pl-10"
+      className="file p-1 text-slate-500 cursor-pointer flex items-center bg-transform pl-5"
       style={FileStyle}
       draggable={true}
       onDoubleClick={() => DND.handleDoubleClick(file)}

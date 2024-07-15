@@ -3,6 +3,7 @@ import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css";
 import "./assets/css/index.css"
 
+
 const SearchInput = {
   border: "1px solid #4f5966",
   fontSize: "12px",
@@ -23,16 +24,16 @@ function Explorer({ setNavFiles }) {
     <div style={FixedSize}>
     <ResizableBox
       className="resizable-box h-full"
-      width="22%"
-      minConstraints={[200, Infinity]}
-      maxConstraints={["22%", Infinity]}
+      width={Infinity}
+      minConstraints={[Infinity, Infinity]}
+      maxConstraints={[Infinity, Infinity]}
       axis="x"
       handle={
         <span className="custom-handle" />
       }
       resizeHandles={["e"]}
     >
-      <div className="bg-main overflow-y-auto border-r-2 p-2 border-t-2 border-slate-700" style={ExplorerStyle}>
+      <div className="bg-main overflow-y-auto overflow-x-auto border-r-2 p-2 border-t-2 border-slate-700" style={ExplorerStyle}>
         <input
           type="search"
           placeholder="Ex: app.js"

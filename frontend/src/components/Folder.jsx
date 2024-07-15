@@ -39,7 +39,7 @@ function Folder({ folder, setNavFiles, onDelete, DND }) {
     }
     const fileCreation = DND.getFileCreation();
     if (fileCreation.file === folder) {
-      return fileCreation.isDir ? "New Folder" : "New File";
+      return fileCreation.isDir ? "" : "";
     }
     return folder.name;
   }
@@ -47,7 +47,7 @@ function Folder({ folder, setNavFiles, onDelete, DND }) {
   return (
     <div>
       <div
-        className="pl-5 p-1 flex items-center gap-2 cursor-pointer text-slate-500 text-sm bg-transform"
+        className="pl-5 p-1 flex items-center gap-2 cursor-pointer text-slate-500 text-sm bg-transform w-full"
         onClick={() => DND.getFileInEdit() !== folder && toggleOpen()}
         {...dragFunctionality}
         onDoubleClick={() => DND.handleDoubleClick(folder)}

@@ -3,7 +3,7 @@ import Folder from "./Folder";
 import axios from "axios";
 
 const BASE_URL = "http://localhost:3000";
-const curretnPath = "/home/ajwadg/ajwad/alx/ALXCode"; // edit this
+const curretnPath = "/home/coder/github/projects/ALXCode/"; // edit this
 const initialStructure = await getStructure(curretnPath);
 
 async function getStructure(path) {
