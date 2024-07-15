@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Folder from "./Folder";
 import axios from "axios";
 
 const BASE_URL = "http://localhost:3000";
-const curretnPath = "/home/coder/github/projects/ALXCode/"; // edit this
+const curretnPath = "/home/cha1ma/ALXCode"; // edit this
 const initialStructure = await getStructure(curretnPath);
 
 async function getStructure(path) {
@@ -43,9 +43,10 @@ async function getStructure(path) {
   return structure;
 }
 
-function FileExplorer({ setNavFiles }) {
+function FileExplorer({ setNavFiles, searchQuery }) {
   const [structure, setStructure] = useState(initialStructure);
   const [fileInEdit, setFileInEdit] = useState(null);
+  const [filteredStructure, setFilteredStructure] = useState(initialStructure);
   const [fileInCreation, setFileInCreation] = useState(null);
 
   const [draggedFile, setDraggedFile] = useState(null);
@@ -220,11 +221,33 @@ function FileExplorer({ setNavFiles }) {
       console.error(error.response.data);
     }
   };
+  useEffect(() => {
+    const filterStructure = (node, query) => {
+      if (node.name.toLowerCase().includes(query.toLowerCase())) {
+        return true;
+      }
+
+      if (node.dir) {
+        node.childs = node.childs.filter((child) => filterStructure(child, query));
+        return node.childs.length > 0;
+      }
+
+      return false;
+    };
+
+    if (searchQuery.trim() === '') {
+      setFilteredStructure(structure); // Reset to original structure
+    } else {
+      const newFilteredStructure = { ...structure };
+      filterStructure(newFilteredStructure, searchQuery);
+      setFilteredStructure(newFilteredStructure);
+    }
+  }, [searchQuery, structure]);
 
   return (
     <div className="pt-4">
       <Folder
-        folder={structure}
+        folder={filteredStructure}
         setNavFiles={setNavFiles}
         onDelete={deleteItem}
         DND={DND}
