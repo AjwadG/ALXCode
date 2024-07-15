@@ -66,13 +66,17 @@ function App() {
     setIsOutputVisible(!isOutputVisible);
   };
 
+  const CustomWidth = {
+    width: "calc(100% - 22%)"
+  }
+
   return (
-    <div className="w-full h-screen bg-blue-950">
+    <div className="w-full h-screen bg-blue-950 overflow-hidden">
       <TopBar />
       <div className="flex w-full" style={fixOverflow}>
         <Explorer setNavFiles={handleNavFilesChange} />
-        <div className="w-full">
-          <FileNavigation
+        <div style={CustomWidth}>
+          <FileNavigation 
             navFiles={openFiles}
             activeFile={activeFile}
             setNavFiles={handleNavFilesChange}
@@ -82,6 +86,7 @@ function App() {
             isOutputVisible={isOutputVisible}
             activeFile={activeFile}
             fileContent={fileContent}
+    
           />
         </div>
       </div>

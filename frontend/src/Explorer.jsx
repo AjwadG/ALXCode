@@ -8,22 +8,31 @@ const SearchInput = {
   fontSize: "12px",
   borderRadius: "3px",
 };
+const ExplorerStyle = {
+  height: "calc(100% - 24px)"
+}
+
+const FixedSize = {
+  width: "22%",
+  height: "100%",
+
+}
 
 function Explorer({ setNavFiles }) {
   return (
+    <div style={FixedSize}>
     <ResizableBox
-      className="resizable-box"
-      width={300}
-      height={Infinity}
+      className="resizable-box h-full"
+      width="22%"
       minConstraints={[200, Infinity]}
-      maxConstraints={[600, Infinity]}
+      maxConstraints={["22%", Infinity]}
       axis="x"
       handle={
         <span className="custom-handle" />
       }
       resizeHandles={["e"]}
     >
-      <div className="bg-main h-full border-r-2 p-2 border-t-2 border-slate-700">
+      <div className="bg-main overflow-y-auto border-r-2 p-2 border-t-2 border-slate-700" style={ExplorerStyle}>
         <input
           type="search"
           placeholder="Ex: app.js"
@@ -32,6 +41,7 @@ function Explorer({ setNavFiles }) {
         <FileExplorer setNavFiles={setNavFiles} />
       </div>
     </ResizableBox>
+    </div>
   );
 }
 

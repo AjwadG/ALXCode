@@ -1,24 +1,26 @@
 import React from "react";
 import { FaFile } from "react-icons/fa";
 
+
 function NavFile({ file, setNavFiles, activeFile }) {
-  const classNames =
-    "flex items-center justify-between text-gray-400 h-full p-3 min-w-28 gap-3 ".concat(
-      activeFile ? "bg-zinc-800" : "bg-zinc-900"
-    );
+  const classNames = `flex items-center justify-between text-gray-400 h-full p-3 w-auto gap-3 ${
+    activeFile ? "bg-zinc-800" : "bg-zinc-900"
+  }`;
+
   return (
     <li className={classNames}>
-      <span
-        className="flex items-center cursor-pointer  text-sm"
+      <p
+        className="flex items-center cursor-pointer text-xs"
         onClick={() => setNavFiles(file, true)}
       >
         <FaFile className="text-yellow-300 mr-1" /> {file.name}
-      </span>{" "}
-      <span onClick={() => setNavFiles(file)} className="cursor-pointer">
+      </p>
+      <p onClick={() => setNavFiles(file)} className="cursor-pointer">
         x
-      </span>
+      </p>
     </li>
   );
 }
 
 export default NavFile;
+

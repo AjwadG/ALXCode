@@ -1,9 +1,12 @@
-import React from "react";
+import React,  { useState } from "react";
 import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css";
 import "./assets/css/index.css";
 
 function Terminal() {
+  const [inputValue, setInputValue] = useState("");
+  const [output, setOutput] = useState("");
+
   const ws = new WebSocket("ws://localhost:3000/ws");
 
   ws.onopen = function () {
@@ -23,17 +26,17 @@ function Terminal() {
   };
 
   function sendCommand() {
-    // here to send the command to the back end allways trim the input
-    // const command = commandInput.value.trim();
-    // if (command !== "") {
-    //   ws.send(command);
-    //   appendOutput(`$ ${command}\n`);
-    // }
+    const command = inputValue.trim();
+    if (command !== "") {
+      ws.send(command);
+      appendOutput(`$ ${command}\n`);
+      setInputValue("");
+    }
   }
 
+  
   function appendOutput(message) {
-    // you logic to append to the terminal
-    console.log(message); // just remove this later
+    setOutput((prevOutput) => prevOutput + message);
   }
 
   return (
@@ -47,7 +50,22 @@ function Terminal() {
       handle={<span className="custom-vertical-handle" />}
       resizeHandles={["n"]}
     >
-      Terminal
+            <div>
+        <pre>{output}</pre>
+        <div>
+          <input className="w-full bg-transparent p-1 text-white outline-none text-sm"
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                sendCommand();
+              }
+            }}
+          />
+          <button onClick={sendCommand}>Send</button>
+        </div>
+      </div>
     </ResizableBox>
   );
 }
