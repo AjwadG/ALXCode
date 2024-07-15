@@ -103,6 +103,7 @@ func main() {
 		api.Delete("/delete", HandleDelete)
 		api.Post("/create", HandleCreate)
 		api.Post("/save", HandleSave)
+		api.Put("/run", HandleRun)
 
 	})
 
@@ -196,6 +197,52 @@ func contains(array []string, filters []string) bool {
 		}
 	}
 	return false
+}
+
+func HandleRun(c *fiber.Ctx) error {
+	body := new(Body)
+	if err := c.BodyParser(body); err != nil {
+		return err
+	}
+	if body.Path == "" {
+		return c.Status(400).JSON(&ErrorReturn{
+			Error: "path is required",
+		})
+	}
+	fileName := strings.Split(body.Path, "/")[len(strings.Split(body.Path, "/"))-1]
+	fileExtension := strings.Split(fileName, ".")[len(strings.Split(fileName, "."))-1]
+
+	if fileExtension == "js" || fileExtension == "jsx" {
+		outPut := OneCommand("node", body.Path)
+		return c.JSON(outPut)
+	}
+
+	if fileExtension == "py" {
+		outPut := OneCommand("python", body.Path)
+		return c.JSON(outPut)
+	}
+
+	if fileExtension == "go" {
+		outPut := OneCommand("go", "run", body.Path)
+		return c.JSON(outPut)
+	}
+
+	if fileExtension == "c" || fileExtension == "cpp" {
+		outPut := OneCommand("gcc", body.Path, "-o", fileName[:len(fileName)-2])
+		if !outPut.Succeed {
+			return c.Status(400).JSON(outPut)
+		}
+		outPut = OneCommand(fileName[:len(fileName)-2])
+		os.Remove(fileName[:len(fileName)-2])
+		return c.JSON(outPut)
+	}
+
+	outPut := OneCommand("chmod", "+x", body.Path)
+	if !outPut.Succeed {
+		return c.Status(400).JSON(outPut)
+	}
+	outPut = OneCommand(body.Path)
+	return c.JSON(outPut)
 }
 
 func HandleSave(c *fiber.Ctx) error {
