@@ -5,8 +5,10 @@ import FileNavigation from "./FileNavigation";
 import CodeBlock from "./CodeBlock";
 import Footer from "./Footer";
 import axios from "axios";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const BASE_URL = "http://localhost:3000";
+const queryClient = new QueryClient();
 
 const fixOverflow = {
   height: "calc(100% - 48px)",
@@ -67,36 +69,37 @@ function App() {
   };
 
   const CustomWidth = {
-    width: "calc(100% - 22%)"
-  }
+    width: "calc(100% - 22%)",
+  };
 
   return (
-    <div className="w-full h-screen bg-blue-950 overflow-hidden">
-      <TopBar />
-      <div className="flex w-full" style={fixOverflow}>
-        <Explorer setNavFiles={handleNavFilesChange} />
-        <div style={CustomWidth}>
-          <FileNavigation 
-            navFiles={openFiles}
-            activeFile={activeFile}
-            setNavFiles={handleNavFilesChange}
-          />
-          <CodeBlock
-            isTerminalVisible={isTerminalVisible}
-            isOutputVisible={isOutputVisible}
-            activeFile={activeFile}
-            fileContent={fileContent}
-    
-          />
+    <QueryClientProvider client={queryClient}>
+      <div className="w-full h-screen bg-blue-950 overflow-hidden">
+        <TopBar />
+        <div className="flex w-full" style={fixOverflow}>
+          <Explorer setNavFiles={handleNavFilesChange} />
+          <div style={CustomWidth}>
+            <FileNavigation
+              navFiles={openFiles}
+              activeFile={activeFile}
+              setNavFiles={handleNavFilesChange}
+            />
+            <CodeBlock
+              isTerminalVisible={isTerminalVisible}
+              isOutputVisible={isOutputVisible}
+              activeFile={activeFile}
+              fileContent={fileContent}
+            />
+          </div>
         </div>
+        <Footer
+          handleToggleTerminal={handleToggleTerminal}
+          isTerminalVisible={isTerminalVisible}
+          isOutputVisible={isOutputVisible}
+          handleToggleOutput={handleToggleOutput}
+        />
       </div>
-      <Footer
-        handleToggleTerminal={handleToggleTerminal}
-        isTerminalVisible={isTerminalVisible}
-        isOutputVisible={isOutputVisible}
-        handleToggleOutput={handleToggleOutput}
-      />
-    </div>
+    </QueryClientProvider>
   );
 }
 

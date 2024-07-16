@@ -1,53 +1,57 @@
 import { useState, useEffect } from "react";
 import Folder from "./Folder";
 import axios from "axios";
+import { useQuery } from "react-query";
 
 const BASE_URL = "http://localhost:3000";
-const curretnPath = "/home/cha1ma/ALXCode"; // edit this
-const initialStructure = await getStructure(curretnPath);
+const curretnPath = "/home/ajwadg/ajwad/alx/ALXCode"; // edit this
 
-async function getStructure(path) {
-  let structure;
-  try {
-    const response = await axios.put(`${BASE_URL}/api/getTree`, {
-      path,
-    });
-    structure = response.data;
-    function buildChilds(parent) {
-      parent.childs = parent.childs.map((child) => {
-        child.parent = parent;
-        if (child.dir) {
-          child.childs = buildChilds(child);
-        }
-        return child;
-      });
-      return parent.childs;
-    }
-
-    structure.childs = structure.childs.map((node) => {
-      node.parent = structure;
-      if (node.dir) {
-        node.childs = buildChilds(node);
+function buildStructure(rootNode) {
+  function buildChilds(parent) {
+    parent.childs = parent.childs.map((child) => {
+      child.parent = parent;
+      if (child.dir) {
+        child.childs = buildChilds(child);
       }
-      return node;
+      return child;
     });
-  } catch (error) {
-    structure = {
-      id: 0,
-      name: "NOT FOUND",
-      dir: true,
-      childs: [],
-    };
-    console.error(error);
+    return parent.childs;
   }
-  return structure;
+
+  rootNode.childs = rootNode.childs.map((node) => {
+    node.parent = rootNode;
+    if (node.dir) {
+      node.childs = buildChilds(node);
+    }
+    return node;
+  });
+
+  return rootNode;
 }
 
 function FileExplorer({ setNavFiles, searchQuery }) {
-  const [structure, setStructure] = useState(initialStructure);
+  const [structure, setStructure] = useState({});
   const [fileInEdit, setFileInEdit] = useState(null);
-  const [filteredStructure, setFilteredStructure] = useState(initialStructure);
+  const [filteredStructure, setFilteredStructure] = useState({});
   const [fileInCreation, setFileInCreation] = useState(null);
+
+  useQuery("structure", () => {
+    fetch(`${BASE_URL}/api/getTree`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        path: curretnPath,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const fileStructure = buildStructure(data);
+        setStructure(fileStructure);
+        setFilteredStructure(fileStructure);
+      });
+  });
 
   const [draggedFile, setDraggedFile] = useState(null);
 
@@ -228,14 +232,16 @@ function FileExplorer({ setNavFiles, searchQuery }) {
       }
 
       if (node.dir) {
-        node.childs = node.childs.filter((child) => filterStructure(child, query));
+        node.childs = node.childs.filter((child) =>
+          filterStructure(child, query)
+        );
         return node.childs.length > 0;
       }
 
       return false;
     };
 
-    if (searchQuery.trim() === '') {
+    if (searchQuery.trim() === "") {
       setFilteredStructure(structure); // Reset to original structure
     } else {
       const newFilteredStructure = { ...structure };
