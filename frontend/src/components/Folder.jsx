@@ -4,7 +4,7 @@ import { VscNewFile, VscNewFolder } from "react-icons/vsc";
 import File from "./File";
 import "./Explorer.css";
 
-function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile, onCreateFolder }) {
+function Folder({ folder, setNavFiles, onDelete, DND }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
@@ -18,13 +18,13 @@ function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile, onCreateFold
 
   const handleCreateFile = (e) => {
     e.stopPropagation();
-    onCreateFile(folder.id);
+    DND.newFileCreation(folder, false);
   };
 
   const handleCreateFolder = (e) => {
     e.stopPropagation();
-    onCreateFolder(folder.id);
-  }
+    DND.newFileCreation(folder, true);
+  };
 
   const dragFunctionality = folder.parent
     ? {
@@ -33,10 +33,21 @@ function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile, onCreateFold
       }
     : { draggable: false };
 
+  function GetName() {
+    if (DND.getFileInEdit() === folder) {
+      return "";
+    }
+    const fileCreation = DND.getFileCreation();
+    if (fileCreation.file === folder) {
+      return fileCreation.isDir ? "" : "";
+    }
+    return folder.name;
+  }
+
   return (
     <div>
       <div
-        className="pl-5 p-1 flex items-center gap-2 cursor-pointer text-slate-500 text-sm bg-transform"
+        className="pl-5 p-1 flex items-center gap-2 cursor-pointer text-slate-500 text-sm bg-transform w-full"
         onClick={() => DND.getFileInEdit() !== folder && toggleOpen()}
         {...dragFunctionality}
         onDoubleClick={() => DND.handleDoubleClick(folder)}
@@ -48,7 +59,7 @@ function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile, onCreateFold
         ) : (
           <FaFolder className="mr-1 text-amber-300" />
         )}{" "}
-        {DND.getFileInEdit() === folder && (
+        {DND.getFileInEdit() === folder && !DND.getFileCreation().file && (
           <input
             className="border-none outline-none bg-main-transparent text-slate-500"
             type="text"
@@ -62,39 +73,56 @@ function Folder({ folder, setNavFiles, onDelete, DND, onCreateFile, onCreateFold
             }}
           />
         )}
-        {DND.getFileInEdit() !== folder && folder.name}
+        {DND.getFileInEdit() !== folder && GetName()}
+        {DND.getFileCreation().file === folder && (
+          <input
+            className="border-none outline-none bg-main-transparent text-slate-500"
+            type="text"
+            autoFocus
+            onBlur={(e) => DND.handleFileCreation(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                DND.handleFileCreation(e.target.value);
+              }
+            }}
+          />
+        )}
         <span className="ml-auto flex flex-row-reverse items-center gap-2">
           <FaTrash
             className="text-red-500 cursor-pointer text-xs opacity-10 hover:opacity-100"
             onClick={handleDelete}
           />
-        <VscNewFile className="text-green-500 cursor-pointer text-xs opacity-25 hover:opacity-100" onClick={handleCreateFile}/>
-        <VscNewFolder className="text-blue-500 cursor-pointer text-xs opacity-25 hover:opacity-100" onClick={handleCreateFolder}/>
+          <VscNewFile
+            className="text-green-500 cursor-pointer text-xs opacity-25 hover:opacity-100"
+            onClick={handleCreateFile}
+          />
+          <VscNewFolder
+            className="text-blue-500 cursor-pointer text-xs opacity-25 hover:opacity-100"
+            onClick={handleCreateFolder}
+          />
         </span>
       </div>
       {isOpen && (
         <div className="folder-contents pl-5">
-          {folder.children.map((item) =>
-            item.isFolder ? (
+          {folder.childs.map((item) =>
+            item.dir && item.match ? (
               <Folder
                 key={item.id}
                 folder={item}
                 setNavFiles={setNavFiles}
                 onDelete={onDelete}
                 DND={DND}
-                onCreateFile={onCreateFile}
-                onCreateFolder={onCreateFolder}
               />
             ) : (
-              <File
-                key={item.id}
-                file={item}
-                setNavFiles={setNavFiles}
-                onDelete={onDelete}
-                DND={DND}
-                onCreateFile={onCreateFile}
-                onCreateFolder={onCreateFolder}
-              />
+              item.match && (
+                <File
+                  key={item.id}
+                  file={item}
+                  setNavFiles={setNavFiles}
+                  onDelete={onDelete}
+                  DND={DND}
+                />
+              )
             )
           )}
         </div>

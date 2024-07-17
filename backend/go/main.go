@@ -11,6 +11,7 @@ import (
 	"sync/atomic"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/websocket/v2"
 	"github.com/joho/godotenv"
 )
@@ -66,7 +67,7 @@ type idCounter struct {
 var sessionCounter int64
 
 func main() {
-	fmt.Println("Hello, World!")
+	fmt.Println("Welcome to ALXCode!")
 
 	PORT := "3000"
 
@@ -77,10 +78,15 @@ func main() {
 	}
 	app := fiber.New()
 
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+	}))
+
 	app.Get("/ws", websocket.New(handleWebSocket))
 
 	app.Static("/scripts", "./static/public/scripts")
 	app.Static("/style", "./static/public/style")
+	app.Static("/images", "./static/public/images")
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendFile("./static/views/index.html")
@@ -91,13 +97,14 @@ func main() {
 
 	app.Route("/api", func(api fiber.Router) {
 
-		api.Get("/getTree", HandleGetTree)
-		api.Get("/readFile", HandleReadFile)
+		api.Put("/getTree", HandleGetTree)
+		api.Put("/readFile", HandleReadFile)
 		api.Put("/move", HandleMove)
 		api.Put("/rename", HandleRename)
 		api.Delete("/delete", HandleDelete)
 		api.Post("/create", HandleCreate)
 		api.Post("/save", HandleSave)
+		api.Put("/run", HandleRun)
 
 	})
 
@@ -108,7 +115,7 @@ func newTerminalSession() *TerminalSession {
 	id := atomic.AddInt64(&sessionCounter, 1)
 	return &TerminalSession{
 		ID:    id,
-		Dir:   "./",
+		Dir:   "/home",
 		CmdCh: make(chan string),
 		OutCh: make(chan string),
 	}
@@ -127,7 +134,7 @@ func (ts *TerminalSession) runShell() {
 		if strings.HasPrefix(cmdStr, "cd ") {
 			if err == nil {
 				ts.Dir = strings.Trim(string(output), "\n")
-				ts.OutCh <- "Changed directory to " + ts.Dir
+				ts.OutCh <- "Changed directory to " + ts.Dir + "\n"
 				continue
 			}
 		}
@@ -146,7 +153,7 @@ func (ts *TerminalSession) runShell() {
 
 func handleWebSocket(conn *websocket.Conn) {
 	session := newTerminalSession()
-	filters := []string{"vi", "sudo", "vim", "nano"}
+	filters := []string{"vi", "sudo", "vim", "nano", "clear", "exit"}
 
 	go session.runShell()
 
@@ -166,7 +173,7 @@ func handleWebSocket(conn *websocket.Conn) {
 		var output string
 
 		if contains(strings.Fields(command), filters) {
-			output = "command not allowed"
+			output = "command not allowed\n"
 		} else {
 			session.CmdCh <- command
 
@@ -190,6 +197,52 @@ func contains(array []string, filters []string) bool {
 		}
 	}
 	return false
+}
+
+func HandleRun(c *fiber.Ctx) error {
+	body := new(Body)
+	if err := c.BodyParser(body); err != nil {
+		return err
+	}
+	if body.Path == "" {
+		return c.Status(400).JSON(&ErrorReturn{
+			Error: "path is required",
+		})
+	}
+	fileName := strings.Split(body.Path, "/")[len(strings.Split(body.Path, "/"))-1]
+	fileExtension := strings.Split(fileName, ".")[len(strings.Split(fileName, "."))-1]
+
+	if fileExtension == "js" || fileExtension == "jsx" {
+		outPut := OneCommand("node", body.Path)
+		return c.JSON(outPut)
+	}
+
+	if fileExtension == "py" {
+		outPut := OneCommand("python3", body.Path)
+		return c.JSON(outPut)
+	}
+
+	if fileExtension == "go" {
+		outPut := OneCommand("go", "run", body.Path)
+		return c.JSON(outPut)
+	}
+
+	if fileExtension == "c" || fileExtension == "cpp" {
+		outPut := OneCommand("gcc", body.Path, "-o", fileName[:len(fileName)-2])
+		if !outPut.Succeed {
+			return c.Status(400).JSON(outPut)
+		}
+		outPut = OneCommand(fileName[:len(fileName)-2])
+		os.Remove(fileName[:len(fileName)-2])
+		return c.JSON(outPut)
+	}
+
+	outPut := OneCommand("chmod", "+x", body.Path)
+	if !outPut.Succeed {
+		return c.Status(400).JSON(outPut)
+	}
+	outPut = OneCommand(body.Path)
+	return c.JSON(outPut)
 }
 
 func HandleSave(c *fiber.Ctx) error {
@@ -277,7 +330,6 @@ func HandleRename(c *fiber.Ctx) error {
 	newPath := strings.Join(strings.Split(body.OldPath, "/")[:len(strings.
 		Split(body.OldPath, "/"))-1], "/") + "/" + body.NewName
 
-	fmt.Println(newPath)
 	output := OneCommand("mv", body.OldPath, newPath)
 	return c.JSON(output)
 }
@@ -321,6 +373,7 @@ func HandleGetTree(c *fiber.Ctx) error {
 		return err
 	}
 	if body.Path == "" {
+		fmt.Println(body.Path, "error body", body)
 		return c.Status(400).JSON(&ErrorReturn{
 			Error: "path is required",
 		})
@@ -404,7 +457,7 @@ func getTree(files []fs.DirEntry, parent *FileType, id *idCounter, prevWG *sync.
 
 func OneCommand(command string, args ...string) ComnadReturn {
 	cmd := exec.Command(command, args...)
-	output, err := cmd.Output()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return ComnadReturn{
 			Succeed: false,
