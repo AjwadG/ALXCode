@@ -4,7 +4,19 @@ import axios from "axios";
 import { useQuery } from "react-query";
 
 const BASE_URL = "http://localhost:3000";
-const curretnPath = "/home/ajwadg/ajwad/alx/ALXCode"; // edit this
+const curretnPath = "/home/cha1ma/ALXCode/"; // edit this
+
+function deepCopy(obj, hash = new WeakMap()) {
+  if (Object(obj) !== obj) return obj;
+  if (hash.has(obj)) return hash.get(obj);
+  const result = Array.isArray(obj) ? [] : obj.constructor ? new obj.constructor() : Object.create(null);
+  hash.set(obj, result);
+  if (obj instanceof Map)
+    Array.from(obj, ([key, val]) => result.set(key, deepCopy(val, hash)));
+  return Object.assign(result, ...Object.keys(obj).map(
+    key => ({ [key]: deepCopy(obj[key], hash) })
+  ));
+}
 
 function buildStructure(rootNode) {
   function buildChilds(parent) {
@@ -244,7 +256,7 @@ function FileExplorer({ setNavFiles, searchQuery }) {
     if (searchQuery.trim() === "") {
       setFilteredStructure(structure); // Reset to original structure
     } else {
-      const newFilteredStructure = { ...structure };
+      const newFilteredStructure = deepCopy(structure);
       filterStructure(newFilteredStructure, searchQuery);
       setFilteredStructure(newFilteredStructure);
     }
