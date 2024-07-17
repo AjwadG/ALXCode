@@ -1,16 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
 import Terminal from "./Terminal";
-import Output from "./Output"
-import { getFileExtension } from './utils';
+import Output from "./Output";
+import { getFileExtension } from "./utils";
 
 const fixOverflow = {
   height: "calc(100% - (48px))",
 };
 
-function CodeBlock({ isTerminalVisible, isOutputVisible, activeFile, fileContent, onSaveFileContent}) {
-
-  const [language, setLanguage] = useState('plaintext');
+function CodeBlock({
+  isTerminalVisible,
+  isOutputVisible,
+  activeFile,
+  fileContent,
+  onSaveFileContent,
+  outPut,
+}) {
+  const [language, setLanguage] = useState("plaintext");
   const [content, setContent] = useState(fileContent);
 
   useEffect(() => {
@@ -18,38 +24,43 @@ function CodeBlock({ isTerminalVisible, isOutputVisible, activeFile, fileContent
       const fileExtension = getFileExtension(activeFile.name);
 
       const languageMap = {
-        js: 'javascript',
-        jsx: 'javascript',
-        html: 'html',
-        css: 'css',
-        py: 'python',
-        go: 'go',
+        js: "javascript",
+        jsx: "javascript",
+        html: "html",
+        css: "css",
+        py: "python",
+        go: "go",
       };
 
-      const newLanguage = languageMap[fileExtension] || 'plaintext';
+      const newLanguage = languageMap[fileExtension] || "plaintext";
       setLanguage(newLanguage);
     } else {
-      setLanguage('plaintext');
+      setLanguage("plaintext");
     }
   }, [activeFile]);
 
   const handleEditorChange = (value) => {
+    activeFile.content = value;
+    fileContent = value;
     setContent(value);
   };
 
-  const handleKeyDown = useCallback((event) => {
-    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
-      event.preventDefault();
-      if (activeFile) {
-        onSaveFileContent(activeFile.id, content);
+  const handleKeyDown = useCallback(
+    (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+        event.preventDefault();
+        if (activeFile) {
+          onSaveFileContent(activeFile, content);
+        }
       }
-    }
-  }, [activeFile, content, onSaveFileContent]);
+    },
+    [activeFile, content, onSaveFileContent]
+  );
 
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleKeyDown]);
 
@@ -64,12 +75,11 @@ function CodeBlock({ isTerminalVisible, isOutputVisible, activeFile, fileContent
           theme="vs-dark"
           value={fileContent}
           onChange={handleEditorChange}
-          
         />
       )}
 
       {isTerminalVisible && <Terminal />}
-      {isOutputVisible && <Output />}
+      {isOutputVisible && <Output outPut={outPut} />}
     </div>
   );
 }

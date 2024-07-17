@@ -4,7 +4,6 @@ import axios from "axios";
 import { useQuery } from "react-query";
 
 const BASE_URL = "http://localhost:3000";
-const curretnPath = "/home/ajwadg/ajwad/alx/ALXCode"; // edit this
 
 const NOT_FOUND = {
   name: "NOT FOUND",
@@ -17,7 +16,6 @@ const NOT_FOUND = {
 function FileExplorer({ setNavFiles, structure, setStructure }) {
   const [fileInEdit, setFileInEdit] = useState(null);
   const [fileInCreation, setFileInCreation] = useState(null);
-
   const [draggedFile, setDraggedFile] = useState(null);
 
   function checkTree(nodeToCheck, targetParent) {
@@ -56,6 +54,7 @@ function FileExplorer({ setNavFiles, structure, setStructure }) {
             path: parent.path,
             fileName: newName,
             isDir: isDir,
+            match: true,
           });
           if (response.data.succeed) {
             parent.childs.push({
@@ -65,6 +64,7 @@ function FileExplorer({ setNavFiles, structure, setStructure }) {
               dir: isDir,
               parent: parent,
               childs: [],
+              match: true,
             });
           } else {
             alert(response.data.output);
@@ -72,8 +72,8 @@ function FileExplorer({ setNavFiles, structure, setStructure }) {
         } catch (error) {
           console.error(error);
         }
-        setStructure(structure);
       }
+      setStructure(structure);
       setFileInCreation(null);
     }
     static getFileInEdit() {

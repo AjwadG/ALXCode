@@ -16,10 +16,10 @@ const fixOverflow = {
 function App() {
   const [isTerminalVisible, setIsTerminalVisible] = useState(false);
   const [isOutputVisible, setIsOutputVisible] = useState(false);
-
   const [openFiles, setOpenFiles] = useState([]);
   const [activeFile, setActiveFile] = useState(null);
   const [fileContent, setFileContent] = useState("");
+  const [outPut, setOutput] = useState("");
 
   const handleNavFilesChange = async (file, isAdd, refresh) => {
     if (refresh) {
@@ -72,21 +72,48 @@ function App() {
     width: "calc(100% - 22%)",
   };
 
-  const handleSaveFileContent = (fileId, newContent) => {
-    // LOGIC FOR SAVING GOES HERE!
-    console.log("saved");
+  const handleSaveFileContent = async (fileToSave) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/api/save`, {
+        filePath: fileToSave.path,
+        content: fileToSave.content,
+      });
+      if (!response.data.succeed) {
+        alert(response.data.output);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleSaveButtonClick = () => {
     if (activeFile) {
-      handleSaveFileContent(activeFile.id, fileContent);
+      handleSaveFileContent(activeFile);
     }
   };
+
+  async function handleRunButtonClick() {
+    if (!activeFile) {
+      return;
+    }
+    try {
+      const response = await axios.put(`${BASE_URL}/api/run`, {
+        Path: activeFile.path,
+      });
+
+      setOutput(outPut + response.data.output);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="w-full h-screen bg-blue-950 overflow-hidden">
-        <TopBar onSaveButtonClick={handleSaveButtonClick} />
+        <TopBar
+          onSaveButtonClick={handleSaveButtonClick}
+          onRunButtonClick={handleRunButtonClick}
+        />
         <div className="flex w-full" style={fixOverflow}>
           <Explorer setNavFiles={handleNavFilesChange} />
           <div style={CustomWidth}>
@@ -99,6 +126,7 @@ function App() {
               isTerminalVisible={isTerminalVisible}
               isOutputVisible={isOutputVisible}
               activeFile={activeFile}
+              outPut={outPut}
               fileContent={fileContent}
               onSaveFileContent={handleSaveFileContent}
             />

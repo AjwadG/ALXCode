@@ -58,10 +58,15 @@ function Terminal() {
       handle={<span className="custom-vertical-handle" />}
       resizeHandles={["n"]}
     >
-      <div ref={terminalRef} className="terminal-content overflow-auto max-h-full">
+      <div
+        ref={terminalRef}
+        className="terminal-content overflow-auto max-h-full"
+      >
         <pre className="output">{output}</pre>
         <div className="flex justify-center items-center mt-2">
-          <span className="prompt mr-2"><FaTerminal /></span>
+          <span className="prompt mr-2">
+            <FaTerminal />
+          </span>
           <input
             className="w-full bg-transparent p-1 text-white outline-none text-sm"
             type="text"
