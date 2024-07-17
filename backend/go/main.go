@@ -67,7 +67,7 @@ type idCounter struct {
 var sessionCounter int64
 
 func main() {
-	fmt.Println("Hello, World!")
+	fmt.Println("Welcome to ALXCode!")
 
 	PORT := "3000"
 
@@ -86,6 +86,7 @@ func main() {
 
 	app.Static("/scripts", "./static/public/scripts")
 	app.Static("/style", "./static/public/style")
+	app.Static("/images", "./static/public/images")
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendFile("./static/views/index.html")
@@ -114,7 +115,7 @@ func newTerminalSession() *TerminalSession {
 	id := atomic.AddInt64(&sessionCounter, 1)
 	return &TerminalSession{
 		ID:    id,
-		Dir:   "./",
+		Dir:   "/home",
 		CmdCh: make(chan string),
 		OutCh: make(chan string),
 	}
@@ -160,7 +161,6 @@ func handleWebSocket(conn *websocket.Conn) {
 		conn.Close()
 		close(session.CmdCh)
 	}()
-	fmt.Println("new session", session.ID)
 
 	for {
 		mt, msg, err := conn.ReadMessage()
@@ -218,7 +218,7 @@ func HandleRun(c *fiber.Ctx) error {
 	}
 
 	if fileExtension == "py" {
-		outPut := OneCommand("python", body.Path)
+		outPut := OneCommand("python3", body.Path)
 		return c.JSON(outPut)
 	}
 

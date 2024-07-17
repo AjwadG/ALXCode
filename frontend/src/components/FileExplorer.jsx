@@ -3,7 +3,9 @@ import Folder from "./Folder";
 import axios from "axios";
 import { useQuery } from "react-query";
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = document.location.origin.includes("localhost")
+  ? "http://localhost:3000"
+  : document.location.origin;
 
 const NOT_FOUND = {
   name: "NOT FOUND",
