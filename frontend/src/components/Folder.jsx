@@ -105,7 +105,7 @@ function Folder({ folder, setNavFiles, onDelete, DND }) {
       {isOpen && (
         <div className="folder-contents pl-5">
           {folder.childs.map((item) =>
-            item.dir ? (
+            item.dir && item.match ? (
               <Folder
                 key={item.id}
                 folder={item}
@@ -114,13 +114,15 @@ function Folder({ folder, setNavFiles, onDelete, DND }) {
                 DND={DND}
               />
             ) : (
-              <File
-                key={item.id}
-                file={item}
-                setNavFiles={setNavFiles}
-                onDelete={onDelete}
-                DND={DND}
-              />
+              item.match && (
+                <File
+                  key={item.id}
+                  file={item}
+                  setNavFiles={setNavFiles}
+                  onDelete={onDelete}
+                  DND={DND}
+                />
+              )
             )
           )}
         </div>

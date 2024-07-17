@@ -4,66 +4,19 @@ import axios from "axios";
 import { useQuery } from "react-query";
 
 const BASE_URL = "http://localhost:3000";
-const curretnPath = "/home/coder/github/projects/ALXCode"; // edit this
+const curretnPath = "/home/ajwadg/ajwad/alx/ALXCode"; // edit this
 
-function deepCopy(obj, hash = new WeakMap()) {
-  if (Object(obj) !== obj) return obj;
-  if (hash.has(obj)) return hash.get(obj);
-  const result = Array.isArray(obj) ? [] : obj.constructor ? new obj.constructor() : Object.create(null);
-  hash.set(obj, result);
-  if (obj instanceof Map)
-    Array.from(obj, ([key, val]) => result.set(key, deepCopy(val, hash)));
-  return Object.assign(result, ...Object.keys(obj).map(
-    key => ({ [key]: deepCopy(obj[key], hash) })
-  ));
-}
+const NOT_FOUND = {
+  name: "NOT FOUND",
+  childs: [],
+  dir: true,
+  parent: null,
+  path: "",
+};
 
-function buildStructure(rootNode) {
-  function buildChilds(parent) {
-    parent.childs = parent.childs.map((child) => {
-      child.parent = parent;
-      if (child.dir) {
-        child.childs = buildChilds(child);
-      }
-      return child;
-    });
-    return parent.childs;
-  }
-
-  rootNode.childs = rootNode.childs.map((node) => {
-    node.parent = rootNode;
-    if (node.dir) {
-      node.childs = buildChilds(node);
-    }
-    return node;
-  });
-
-  return rootNode;
-}
-
-function FileExplorer({ setNavFiles, searchQuery }) {
-  const [structure, setStructure] = useState({});
+function FileExplorer({ setNavFiles, structure, setStructure }) {
   const [fileInEdit, setFileInEdit] = useState(null);
-  const [filteredStructure, setFilteredStructure] = useState({});
   const [fileInCreation, setFileInCreation] = useState(null);
-
-  useQuery("structure", () => {
-    fetch(`${BASE_URL}/api/getTree`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        path: curretnPath,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const fileStructure = buildStructure(data);
-        setStructure(fileStructure);
-        setFilteredStructure(fileStructure);
-      });
-  });
 
   const [draggedFile, setDraggedFile] = useState(null);
 
@@ -237,35 +190,11 @@ function FileExplorer({ setNavFiles, searchQuery }) {
       console.error(error.response.data);
     }
   };
-  useEffect(() => {
-    const filterStructure = (node, query) => {
-      if (node.name.toLowerCase().includes(query.toLowerCase())) {
-        return true;
-      }
-
-      if (node.dir) {
-        node.childs = node.childs.filter((child) =>
-          filterStructure(child, query)
-        );
-        return node.childs.length > 0;
-      }
-
-      return false;
-    };
-
-    if (searchQuery.trim() === "") {
-      setFilteredStructure(structure); // Reset to original structure
-    } else {
-      const newFilteredStructure = deepCopy(structure);
-      filterStructure(newFilteredStructure, searchQuery);
-      setFilteredStructure(newFilteredStructure);
-    }
-  }, [searchQuery, structure]);
 
   return (
     <div className="pt-4">
       <Folder
-        folder={filteredStructure}
+        folder={structure}
         setNavFiles={setNavFiles}
         onDelete={deleteItem}
         DND={DND}
