@@ -20,7 +20,13 @@ const InputStyle = {
 const RunButton = {
   color: "green",
 };
-function TopBar({ onSaveButtonClick, onRunButtonClick }) {
+function TopBar({ onSaveButtonClick, onRunButtonClick, onTopBarSearch }) {
+  function handleFileSearch(e) {
+    if (e.key === "Enter" && e.target.value !== "") {
+      onTopBarSearch(e.target.value);
+      e.target.value = "";
+    }
+  }
   return (
     <div className="w-full h-12 flex-container items-center justify-between bg-main  py-5 px-1">
       <img src={alxLogo} style={logoStyle} className="" />
@@ -28,6 +34,7 @@ function TopBar({ onSaveButtonClick, onRunButtonClick }) {
         type="text"
         className=""
         style={InputStyle}
+        onKeyDown={handleFileSearch}
         placeholder="Find File"
       />
       <div className="cursor-pointer flex justify-center items-center">

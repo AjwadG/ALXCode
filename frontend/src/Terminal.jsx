@@ -4,7 +4,13 @@ import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css";
 import "./assets/css/index.css";
 
-const ws = new WebSocket("ws://localhost:3000/ws");
+const BASE_URL = document.location.origin.includes("localhost")
+  ? "http://localhost:3000"
+  : document.location.origin;
+const wsURL = BASE_URL.split(":")[1];
+const originalPort = BASE_URL.split(":")[2];
+const mapedPort = wsURL.includes("localhost") ? originalPort : 9999;
+const ws = new WebSocket(`ws://${wsURL}:${mapedPort}/ws`);
 
 function Terminal() {
   const [inputValue, setInputValue] = useState("");

@@ -27,8 +27,10 @@ const NOT_FOUND = {
   path: "",
 };
 
-const BASE_URL = "http://localhost:3000";
-const curretnPath = "/home/ajwadg/ajwad/alx/ALXCode"; // edit this
+const BASE_URL = document.location.origin.includes("localhost")
+  ? "http://localhost:3000"
+  : document.location.origin;
+const curretnPath = "/home"; // edit this
 
 function buildStructure(rootNode) {
   function buildChilds(parent) {
@@ -56,9 +58,7 @@ function buildStructure(rootNode) {
   return rootNode;
 }
 
-function Explorer({ setNavFiles }) {
-  const [structure, setStructure] = useState(NOT_FOUND);
-
+function Explorer({ setNavFiles, structure, setStructure }) {
   useQuery("structure", () => {
     fetch(`${BASE_URL}/api/getTree`, {
       method: "PUT",

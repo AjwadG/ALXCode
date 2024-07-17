@@ -5,10 +5,46 @@ import FileNavigation from "./FileNavigation";
 import CodeBlock from "./CodeBlock";
 import Footer from "./Footer";
 import axios from "axios";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = document.location.origin.includes("localhost")
+  ? "http://localhost:3000"
+  : document.location.origin;
 const queryClient = new QueryClient();
+
+const NOT_FOUND = {
+  name: "NOT FOUND",
+  childs: [],
+  dir: true,
+  parent: null,
+  path: "",
+};
+
+function buildStructure(rootNode) {
+  function buildChilds(parent) {
+    parent.childs = parent.childs.map((child) => {
+      child.match = true;
+      child.parent = parent;
+      if (child.dir) {
+        child.childs = buildChilds(child);
+      }
+      return child;
+    });
+    return parent.childs;
+  }
+
+  rootNode.childs = rootNode.childs.map((node) => {
+    node.parent = rootNode;
+    node.match = true;
+    if (node.dir) {
+      node.childs = buildChilds(node);
+    }
+    return node;
+  });
+  rootNode.match = true;
+
+  return rootNode;
+}
 
 const fixOverflow = {
   height: "calc(100% - 48px)",
@@ -20,6 +56,7 @@ function App() {
   const [activeFile, setActiveFile] = useState(null);
   const [fileContent, setFileContent] = useState("");
   const [outPut, setOutput] = useState("");
+  const [structure, setStructure] = useState(NOT_FOUND);
 
   const handleNavFilesChange = async (file, isAdd, refresh) => {
     if (refresh) {
@@ -107,15 +144,36 @@ function App() {
     }
   }
 
+  async function handleTopBarSearch(path) {
+    try {
+      const response = await axios.put(`${BASE_URL}/api/getTree`, {
+        path,
+      });
+      const newStructure = buildStructure(response.data);
+      setOpenFiles([]);
+      setActiveFile(null);
+      setFileContent("");
+      setStructure(newStructure);
+    } catch (err) {
+      alert(err.response.data);
+      console.error(err.response.data);
+    }
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="w-full h-screen bg-blue-950 overflow-hidden">
         <TopBar
           onSaveButtonClick={handleSaveButtonClick}
           onRunButtonClick={handleRunButtonClick}
+          onTopBarSearch={handleTopBarSearch}
         />
         <div className="flex w-full" style={fixOverflow}>
-          <Explorer setNavFiles={handleNavFilesChange} />
+          <Explorer
+            setNavFiles={handleNavFilesChange}
+            structure={structure}
+            setStructure={setStructure}
+          />
           <div style={CustomWidth}>
             <FileNavigation
               navFiles={openFiles}
