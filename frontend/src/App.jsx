@@ -72,10 +72,21 @@ function App() {
     width: "calc(100% - 22%)",
   };
 
+  const handleSaveFileContent = (fileId, newContent) => {
+    // LOGIC FOR SAVING GOES HERE!
+    console.log("saved");
+  };
+
+  const handleSaveButtonClick = () => {
+    if (activeFile) {
+      handleSaveFileContent(activeFile.id, fileContent);
+    }
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="w-full h-screen bg-blue-950 overflow-hidden">
-        <TopBar />
+        <TopBar onSaveButtonClick={handleSaveButtonClick} />
         <div className="flex w-full" style={fixOverflow}>
           <Explorer setNavFiles={handleNavFilesChange} />
           <div style={CustomWidth}>
@@ -89,6 +100,7 @@ function App() {
               isOutputVisible={isOutputVisible}
               activeFile={activeFile}
               fileContent={fileContent}
+              onSaveFileContent={handleSaveFileContent}
             />
           </div>
         </div>

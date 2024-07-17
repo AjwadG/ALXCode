@@ -4,7 +4,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 
 const BASE_URL = "http://localhost:3000";
-const curretnPath = "/home/cha1ma/ALXCode/"; // edit this
+const curretnPath = "/home/coder/github/projects/ALXCode"; // edit this
 
 function deepCopy(obj, hash = new WeakMap()) {
   if (Object(obj) !== obj) return obj;

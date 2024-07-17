@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
 import Terminal from "./Terminal";
 import Output from "./Output"
@@ -8,9 +8,10 @@ const fixOverflow = {
   height: "calc(100% - (48px))",
 };
 
-function CodeBlock({ isTerminalVisible, isOutputVisible, activeFile, fileContent}) {
+function CodeBlock({ isTerminalVisible, isOutputVisible, activeFile, fileContent, onSaveFileContent}) {
 
   const [language, setLanguage] = useState('plaintext');
+  const [content, setContent] = useState(fileContent);
 
   useEffect(() => {
     if (activeFile) {
@@ -32,6 +33,25 @@ function CodeBlock({ isTerminalVisible, isOutputVisible, activeFile, fileContent
     }
   }, [activeFile]);
 
+  const handleEditorChange = (value) => {
+    setContent(value);
+  };
+
+  const handleKeyDown = useCallback((event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+      event.preventDefault();
+      if (activeFile) {
+        onSaveFileContent(activeFile.id, content);
+      }
+    }
+  }, [activeFile, content, onSaveFileContent]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
   return (
     <div className="w-full bg-second relative" style={fixOverflow}>
@@ -43,6 +63,7 @@ function CodeBlock({ isTerminalVisible, isOutputVisible, activeFile, fileContent
           defaultLanguage={language}
           theme="vs-dark"
           value={fileContent}
+          onChange={handleEditorChange}
           
         />
       )}
