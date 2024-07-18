@@ -1,10 +1,10 @@
-# ALXCode
-* Overview :
+# ALXCode 
+                                                             Overview :
 
 Welcome to ALXCode, the ultimate online text editor designed for the ALX Intranet, but versatile enough to run on any server! With ALXCode, students can effortlessly open, edit, and perfect their code directly in the browser. Say goodbye to terminal-based editors and hello to a whole new world of coding!
 
                                                           Project Structure
-   # Backend
+   # Backend :
 
 * go: Contains Go-related files and modules. 
 
@@ -66,6 +66,52 @@ Welcome to ALXCode, the ultimate online text editor designed for the ALX Intrane
 
 * README.md: Documentation for the NodeJS backend.
 
+# Frontend :
+
+* public: Public assets for the frontend.
+  
+     + alx-logo-white.png: Logo image.
+     + vite.svg: Vite logo.
+
+* src: Source code for the frontend.
+
+     + assets/css: CSS files
+       
+       => ndex.css: Main CSS file
+
+     + components: React components.
+
+       => Explorer.css: CSS for Explorer component.
+  
+       => File.jsx: File component.
+  
+       => FileExplorer.jsx: File Explorer component.
+  
+       => Folder.jsx: Folder component.
+  
+       => NavFile.jsx: Navigation File component.
+  
+       => App.jsx: Main App component.
+  
+       => CodeBlock.jsx: Code Block component.
+  
+       => Explorer.jsx: Explorer component.
+   
+       => FileNavigation.jsx: File Navigation component.
+  
+       => Footer.jsx: Footer component.
+  
+       => Output.jsx: Output component.
+  
+       => Terminal.jsx: Terminal component.
+  
+       => Topbar.jsx: Topbar component.
+  
+       => main.jsx: Main entry point for the frontend.
+
+    + utils.js: Utility functions.
+
+* 
 
 
 
