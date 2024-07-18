@@ -57,7 +57,7 @@ function Terminal() {
     <ResizableBox
       className="resizable-box overflow-auto absolute bottom-2 w-full bg-second  text-white"
       width={Infinity}
-      height={250}
+      height={300}
       minConstraints={[Infinity, 50]}
       maxConstraints={[Infinity, 500]}
       axis="y"
