@@ -10,6 +10,62 @@ Welcome to ALXCode, the ultimate online text editor designed for the ALX Intrane
 * hamzahdili2001 :  hdilihamza955@gmail.com
 * Cha1mae : chaimastaifa@gmail.com
                                                           
+# Features :
+
+*  Browser-Based Editing: Edit your code directly in the browser.
+  
+* In-Browser Execution: Run your code without leaving the editor.
+
+* Integrated Terminal: Access a built-in terminal for command-line tasks.
+
+* File Explorer: Navigate through your files with ease.
+  
+* Local File Access: Open files from anywhere on your computer.
+
+* Language Detection: Automatically detects the programming language of the file you are editing.
+
+
+# Technologies : 
+
+* Front-End: Built with React.js and styled using Tailwind CSS.
+
+* Back-End: Powered by Go.
+
+# How to Run the Project : 
+
+1. Clone the repository:
+   
+       git clone https://github.com/AjwadG/ALXCode.git
+
+
+### Using it for your sandbox :
+Please follow the instructions in the video in order to ensure that it functions correctly on your sandbox
+
+# Project demo : 
+
+[![Watch the video](https://img.youtube.com/vi/NsKEQyOKiUQ/0.jpg)](https://www.youtube.com/watch?v=NsKEQyOKiUQ)
+
+
+
+### Using it for Dev :
+3. Run the development servers:
+Open two terminals:
+ * First Terminal (Front-End):
+
+       cd ALXCode/frontend
+       npm install
+       npm run dev
+   
+* Second Terminal (Back-End):
+
+      cd ALXCode/backend/go
+      go mod tidy
+      go run main.go
+
+
+
+
+
 # Project Structure:
 
 # Frontend :
@@ -138,54 +194,6 @@ Welcome to ALXCode, the ultimate online text editor designed for the ALX Intrane
 * images: Contains image assets such as alx-logo-white-B2jpy1kh.png and alx-logo-white.png. 
 
 * README.md: Documentation for the backend. 
-
-# Features :
-
-*  Browser-Based Editing: Edit your code directly in the browser.
-  
-* In-Browser Execution: Run your code without leaving the editor.
-
-* Integrated Terminal: Access a built-in terminal for command-line tasks.
-
-* File Explorer: Navigate through your files with ease.
-  
-* Local File Access: Open files from anywhere on your computer.
-
-* Language Detection: Automatically detects the programming language of the file you are editing.
-
-
-# Technologies : 
-
-* Front-End: Built with React.js and styled using Tailwind CSS.
-
-* Back-End: Powered by Go.
-
-# How to Run the Project : 
-
-1. Clone the repository:
-   
-       git clone https://github.com/AjwadG/ALXCode.git
-
-2. Run the development servers:
-Open two terminals:
- * First Terminal (Front-End):
-
-       cd ALXCode/frontend
-       npm install
-       npm run dev
-   
-* Second Terminal (Back-End):
-
-      cd ALXCode/backend/go
-      go mod tidy
-      go run main.go
-
-Please follow the instructions in the video in order to ensure that it functions correctly on your sandbox
-
-
-# Project demo : 
-
-[![Watch the video](https://img.youtube.com/vi/NsKEQyOKiUQ/0.jpg)](https://www.youtube.com/watch?v=NsKEQyOKiUQ)
 
 # License : 
 
