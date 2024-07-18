@@ -131,6 +131,26 @@ Welcome to ALXCode, the ultimate online text editor designed for the ALX Intrane
   
 * LICENSE: License file.
 
+# Features :
+
+*  Browser-Based Editing: Edit your code directly in the browser.
+  
+* In-Browser Execution: Run your code without leaving the editor.
+
+* Integrated Terminal: Access a built-in terminal for command-line tasks.
+
+* File Explorer: Navigate through your files with ease.
+  
+* Local File Access: Open files from anywhere on your computer.
+
+* Language Detection: Automatically detects the programming language of the file you are editing.
+
+# Technologies : 
+
+* Front-End: Built with React.js and styled using Tailwind CSS.
+
+* Back-End: Powered by Go.
+
 
 
 
