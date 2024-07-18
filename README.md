@@ -111,7 +111,26 @@ Welcome to ALXCode, the ultimate online text editor designed for the ALX Intrane
 
     + utils.js: Utility functions.
 
-* 
+* .eslintrc.cjs: ESLint configuration file.
+  
+* .gitignore: Git ignore file.
+  
+* README.md: Documentation for the frontend.
+  
+* index.html: Main HTML file for the frontend.
+  
+* package-lock.json: Dependency lock file.
+  
+* package.json: NodeJS package file.
+  
+* postcss.config.js: PostCSS configuration file.
+  
+* tailwind.config.js: Tailwind CSS configuration file.
+  
+* vite.config.js: Vite configuration file.
+  
+* LICENSE: License file.
+
 
 
 
