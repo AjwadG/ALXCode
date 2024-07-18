@@ -6,6 +6,9 @@ import CodeBlock from "./CodeBlock";
 import Footer from "./Footer";
 import axios from "axios";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 const BASE_URL = document.location.origin.includes("localhost")
   ? "http://localhost:3000"
@@ -71,7 +74,7 @@ function App() {
         if (response.data.succeed) {
           file.content = response.data.output;
         } else {
-          alert(response.data.output);
+          toast.error(response.data.output);
         }
       } catch (err) {
         console.error(err);
@@ -116,7 +119,7 @@ function App() {
         content: fileToSave.content,
       });
       if (!response.data.succeed) {
-        alert(response.data.output);
+        toast.error(response.data.output);
       }
     } catch (err) {
       console.error(err);
@@ -155,7 +158,7 @@ function App() {
       setFileContent("");
       setStructure(newStructure);
     } catch (err) {
-      alert(err.response.data);
+      toast.error(err.response.data);
       console.error(err.response.data);
     }
   }
@@ -196,6 +199,7 @@ function App() {
           isOutputVisible={isOutputVisible}
           handleToggleOutput={handleToggleOutput}
         />
+        <ToastContainer />
       </div>
     </QueryClientProvider>
   );

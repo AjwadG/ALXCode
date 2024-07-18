@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Folder from "./Folder";
 import axios from "axios";
 import { useQuery } from "react-query";
+import { toast } from 'react-toastify';
 
 const BASE_URL = document.location.origin.includes("localhost")
   ? "http://localhost:3000"
@@ -69,7 +70,7 @@ function FileExplorer({ setNavFiles, structure, setStructure }) {
               match: true,
             });
           } else {
-            alert(response.data.output);
+            toast.error(response.data.output);
           }
         } catch (error) {
           console.error(error);
@@ -101,7 +102,7 @@ function FileExplorer({ setNavFiles, structure, setStructure }) {
             fileInEdit.path = fileInEdit.parent.path + "/" + newName;
             DND.fixChilds(fileInEdit);
           } else {
-            alert(response.data.output);
+            toast.error(response.data.output);
           }
         } catch (error) {
           console.error(error);
@@ -151,7 +152,7 @@ function FileExplorer({ setNavFiles, structure, setStructure }) {
             targetFolder.childs.push(draggedFile);
             setStructure(structure);
           } else {
-            alert(response.data.output);
+            toast.error(response.data.output);
           }
         } catch (error) {
           console.error(error);
@@ -185,7 +186,7 @@ function FileExplorer({ setNavFiles, structure, setStructure }) {
         setStructure(newStructure);
         setNavFiles(item);
       } else {
-        alert(response.data.output);
+        toast.error(response.data.output);
       }
     } catch (error) {
       console.error(error);
