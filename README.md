@@ -180,6 +180,9 @@ Open two terminals:
       go mod tidy
       go run main.go
 
+Please follow the instructions in the video in order to ensure that it functions correctly on your sandbox
+
+
 # Project demo : 
 
 [![Watch the video](https://img.youtube.com/vi/NsKEQyOKiUQ/0.jpg)](https://www.youtube.com/watch?v=NsKEQyOKiUQ)
