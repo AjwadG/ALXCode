@@ -151,8 +151,47 @@ Welcome to ALXCode, the ultimate online text editor designed for the ALX Intrane
 
 * Back-End: Powered by Go.
 
+# Dependencies
+
+To run this project, you need to have:
+
+* Go 1.22.x
+
+* Node.js 18.x
+
+# How to Run the Project : 
+
+1. Clone the repository:
+   
+       git clone https://github.com/AjwadG/ALXCode.git
+
+2. Run the development servers:
+Open two terminals:
+ * First Terminal (Front-End):
+
+       cd ALXCode/frontend
+       npm install
+       npm run dev
+   
+* Second Terminal (Back-End):
+
+      cd ALXCode/backend/go
+      go mod tidy
+      go run main.go
 
 
 
+# Project demo : 
+
+[![Watch the video](https://img.youtube.com/vi/NsKEQyOKiUQ/0.jpg)](https://www.youtube.com/watch?v=NsKEQyOKiUQ)
 
 
+# AUTHORS :
+
+* AjwadG :   ajwadelgandouz@yahoo.com
+* hamzahdili2001 :  hdilihamza955@gmail.com
+* Cha1mae : chaimastaifa@gmail.com
+
+# License : 
+
+This project is licensed under the terms specified in the LICENSE file.
