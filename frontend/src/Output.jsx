@@ -6,7 +6,7 @@ import "./assets/css/index.css";
 function Output({ outPut }) {
   return (
     <ResizableBox
-      className="resizable-box absolute bottom-2 w-full bg-second border-t-2 border-slate-600 text-white p-2"
+      className="resizable-box overflow-auto p-4 absolute bottom-2 w-full bg-second border-t-2 border-slate-600 text-white"
       width={Infinity}
       height={250}
       minConstraints={[Infinity, 50]}
