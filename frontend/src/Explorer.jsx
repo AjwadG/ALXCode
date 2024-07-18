@@ -4,6 +4,7 @@ import { ResizableBox } from "react-resizable";
 import { useQuery } from "react-query";
 import "react-resizable/css/styles.css";
 import "./assets/css/index.css";
+import { toast } from "react-toastify";
 
 const SearchInput = {
   border: "1px solid #4f5966",
@@ -76,7 +77,7 @@ function Explorer({ setNavFiles, structure, setStructure }) {
       })
       .catch((error) => {
         setStructure(NOT_FOUND);
-        console.error(error);
+        toast.error(error);
       });
   });
 

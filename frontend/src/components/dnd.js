@@ -65,7 +65,7 @@ export const DND = (
 						toast.error(response.data.output);
 					}
 				} catch (error) {
-					console.error(error);
+					toast.error(error);
 				}
 			}
 			setStructure(structure);
@@ -97,7 +97,7 @@ export const DND = (
 						toast.error(response.data.output);
 					}
 				} catch (error) {
-					console.error(error);
+					toast.error(error);
 				}
 				setNavFiles(null, null, true);
 			}
@@ -147,7 +147,7 @@ export const DND = (
 						toast.error(response.data.output);
 					}
 				} catch (error) {
-					console.error(error);
+					toast.error(error);
 				}
 				setDraggedFile(null);
 			}

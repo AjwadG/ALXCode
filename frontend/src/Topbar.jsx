@@ -1,6 +1,7 @@
 import { GiMoebiusTriangle } from "react-icons/gi";
 import { IoSaveOutline } from "react-icons/io5";
 import alxLogo from "./assets/alx-logo-white.png";
+import { toast } from "react-toastify";
 
 const logoStyle = {
   width: "55px",
@@ -24,6 +25,7 @@ function TopBar({ onSaveButtonClick, onRunButtonClick, onTopBarSearch }) {
   function handleFileSearch(e) {
     if (e.key === "Enter" && e.target.value !== "") {
       onTopBarSearch(e.target.value);
+      toast.success(`Searching for ${e.target.value}`);
       e.target.value = "";
     }
   }

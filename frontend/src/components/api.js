@@ -31,8 +31,8 @@ export const deleteItem = async (
 			toast.error(response.data.output);
 		}
 	} catch (error) {
-		console.error(error);
-		console.error(error.response.data);
+		toast.error(error);
+		toast.error(error.response.data);
 	}
 };
 
@@ -59,7 +59,7 @@ export const handleNavFilesChange = async (
 				toast.error(response.data.output);
 			}
 		} catch (err) {
-			console.error(err);
+			toast.error(err);
 		}
 		if (!openFiles.includes(file)) {
 			setOpenFiles([...openFiles, file]);
@@ -86,7 +86,7 @@ export const handleSaveFileContent = async fileToSave => {
 			toast.error(response.data.output);
 		}
 	} catch (err) {
-		console.error(err);
+		toast.error(err);
 	}
 };
 
@@ -101,7 +101,7 @@ export const handleRunButtonClick = async (activeFile, setOutput, outPut) => {
 
 		setOutput(outPut + response.data.output);
 	} catch (err) {
-		console.error(err);
+		toast.error(err);
 	}
 };
 
@@ -123,6 +123,5 @@ export const handleTopBarSearch = async (
 		setStructure(newStructure);
 	} catch (err) {
 		toast.error(err.response.data);
-		console.error(err.response.data);
 	}
 };
