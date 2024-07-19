@@ -6,16 +6,17 @@ import "./assets/css/index.css";
 function Output({ outPut }) {
   return (
     <ResizableBox
-      className="resizable-box absolute bottom-2 w-full bg-second border-t-2 border-slate-600 text-white p-2"
+      className="resizable-box overflow-auto absolute bottom-2 w-full bg-second  text-white"
       width={Infinity}
-      height={250}
+      height={200}
       minConstraints={[Infinity, 50]}
       maxConstraints={[Infinity, 500]}
       axis="y"
       handle={<span className="custom-vertical-handle" />}
       resizeHandles={["n"]}
     >
-      <pre className="output">{outPut}</pre>
+      <div className="bg-green-500 p-2 text-xs uppercase">Output</div>
+      <pre className="output p-2">{outPut}</pre>
     </ResizableBox>
   );
 }

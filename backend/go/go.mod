@@ -1,4 +1,4 @@
-module github.com/AjwadG/ALXCode/backend/go
+module ALXCode
 
 go 1.22.5
 
