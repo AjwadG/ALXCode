@@ -82,10 +82,11 @@ function Terminal({ setNewDirectory, newDirectory }) {
       handle={<span className="custom-vertical-handle" />}
       resizeHandles={["n"]}
     >
-      <div className="bg-sky-400 p-2 text-xs uppercase">Terminal</div>
+      <>
+      <div className="bg-sky-400 p-2 text-xs uppercase absolute top-0 w-full">Terminal</div>
       <div
         ref={terminalRef}
-        className="terminal-content overflow-auto max-h-full p-2"
+        className="terminal-content overflow-auto max-h-full p-2 mt-5"
       >
         <pre className="output">{output}</pre>
         <div className="flex justify-center items-center mt-2">
@@ -105,6 +106,7 @@ function Terminal({ setNewDirectory, newDirectory }) {
           />
         </div>
       </div>
+      </>
     </ResizableBox>
   );
 }
