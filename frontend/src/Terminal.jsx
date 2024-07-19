@@ -7,12 +7,18 @@ import "./assets/css/index.css";
 const BASE_URL = document.location.origin.includes("localhost")
   ? "http://localhost:3000"
   : document.location.origin;
+
 const wsURL = BASE_URL.split(":")[1];
 const originalPort = BASE_URL.split(":")[2];
-const mapedPort = wsURL.includes("localhost") ? originalPort : 9999;
+
+const mapedPort =
+  wsURL.includes("localhost") || wsURL.includes("127.0.0.1")
+    ? originalPort
+    : 9999;
+
 const ws = new WebSocket(`ws://${wsURL}:${mapedPort}/ws`);
 
-function Terminal() {
+function Terminal({ setNewDirectory, newDirectory }) {
   const [inputValue, setInputValue] = useState("");
   const [output, setOutput] = useState("");
 
@@ -35,8 +41,12 @@ function Terminal() {
   function sendCommand() {
     const command = inputValue.trim();
     if (command !== "") {
-      ws.send(command);
-      appendOutput(`$ ${command}\n`);
+      if (command === "clear") {
+        setOutput("");
+      } else {
+        ws.send(command);
+        appendOutput(`$ ${command}\n`);
+      }
       setInputValue("");
     }
   }
@@ -52,6 +62,14 @@ function Terminal() {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
   }, [output]);
+
+  useEffect(() => {
+    if (newDirectory) {
+      const command = `cd ${newDirectory}`;
+      ws.send(command);
+      setNewDirectory(null);
+    }
+  }, [newDirectory]);
 
   return (
     <ResizableBox

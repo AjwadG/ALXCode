@@ -64,10 +64,7 @@ Gets the tree of the supplied path.
 #### Request
 
 ```sh
-curl -X GET http://localhost:3000/api/getTree -H "Content-Type: application/json"
--d '{
-  "path": "/path/to/directory"
-}'
+curl -X GET http://localhost:3000/api/getTree?path=/path/to/directory
 ```
 
 #### Response
@@ -105,10 +102,7 @@ Gets the Conten of the supplied file.
 #### Request
 
 ```sh
-curl -X GET http://localhost:3000/api/readFile -H "Content-Type: application/json"
--d '{
-  "path": "/path/to/file"
-}'
+curl -X GET http://localhost:3000/api/readFile?path=/path/to/file
 ```
 
 #### Response
@@ -241,6 +235,29 @@ curl -X POST http://localhost:3000/api/save -H "Content-Type: application/json"
 }
 ```
 
+### PUT /api/run
+
+Executes the file according to the file extension if it has one otherwise it runs it normaly
+
+#### Request
+
+```sh
+curl -X PUT http://localhost:3000/api/run -H "Content-Type: application/json"
+-d '{
+    "path": "/path/to/file"
+}'
+```
+
+#### Response
+
+```json
+{
+    "succeed": true,
+    "output": "stdout of the file",
+    "error": "stderr of the file"
+}
+```
+
 ## Normal EndPoints
 
 ### api Documentation
@@ -248,6 +265,6 @@ curl -X POST http://localhost:3000/api/save -H "Content-Type: application/json"
 #### you can faind the full doc on http://localhost:3000/doc
 
 
-### Terminal session with webSocket
+### ALXCode the code editor
 
-#### you can faind a demo on http://localhost:3000/
+#### you use ALXCode on http://localhost:3000/

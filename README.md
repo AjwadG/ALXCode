@@ -1,201 +1,199 @@
-# ALXCode 
+# ALXCode
 
 # Overview :
 
 Welcome to ALXCode, the ultimate online text editor designed for the ALX Intranet, but versatile enough to run on any server! With ALXCode, students can effortlessly open, edit, and perfect their code directly in the browser. Say goodbye to terminal-based editors and hello to a whole new world of coding!
 
-# AUTHORS :
-
-* AjwadG :   ajwadelgandouz@yahoo.com
-* hamzahdili2001 :  hdilihamza955@gmail.com
-* Cha1mae : chaimastaifa@gmail.com
-                                                          
 # Features :
 
-*  Browser-Based Editing: Edit your code directly in the browser.
-  
-* In-Browser Execution: Run your code without leaving the editor.
+- Browser-Based Editing: Edit your code directly in the browser.
 
-* Integrated Terminal: Access a built-in terminal for command-line tasks.
+- In-Browser Execution: Run your code without leaving the editor.
 
-* File Explorer: Navigate through your files with ease.
-  
-* Local File Access: Open files from anywhere on your computer.
+- Integrated Terminal: Access a built-in terminal for command-line tasks.
 
-* Language Detection: Automatically detects the programming language of the file you are editing.
+- File Explorer: Navigate through your files with ease.
+- Local File Access: Open files from anywhere on your computer.
 
+- Language Detection: Automatically detects the programming language of the file you are editing.
 
-# Technologies : 
+# Technologies :
 
-* Front-End: Built with React.js and styled using Tailwind CSS.
+- Front-End: Built with React.js and styled using Tailwind CSS.
 
-* Back-End: Powered by Go.
+- Back-End: Built with Go, fiber and websocket.
 
-# How to Run the Project : 
+- Back-End beta version: Built with expressa and socketio
+
+# How to Run the Project :
 
 1. Clone the repository:
-   
-       git clone https://github.com/AjwadG/ALXCode.git
 
+   git clone https://github.com/AjwadG/ALXCode.git
 
 ### Using it for your sandbox :
+
+2. Run the development servers:
+      cd ALXCode/backend/go
+
+3. Set server port number:
+      ./selectPort PORT
+
+4. Set Port maping if used in sandbox:
+      ./fixPortMaping.sh MAPED_PORT
+
+5. Start the server:
+      ./ALXCode
+
 Please follow the instructions in the video in order to ensure that it functions correctly on your sandbox
 
-# Project demo : 
+# Project demo :
 
 [![Watch the video](https://img.youtube.com/vi/NsKEQyOKiUQ/0.jpg)](https://www.youtube.com/watch?v=NsKEQyOKiUQ)
 
-
-
 ### Using it for Dev :
-3. Run the development servers:
-Open two terminals:
- * First Terminal (Front-End):
 
-       cd ALXCode/frontend
-       npm install
-       npm run dev
-   
-* Second Terminal (Back-End):
+2. Run the development servers:
+   Open two terminals:
+
+- First Terminal (Front-End):
+
+      cd ALXCode/frontend
+      npm install
+      npm run dev
+
+- Second Terminal (Back-End):
 
       cd ALXCode/backend/go
       go mod tidy
       go run main.go
 
-
-
-
-
 # Project Structure:
 
 # Frontend :
 
-* public: Public assets for the frontend.
-  
-     + alx-logo-white.png: Logo image.
-     + vite.svg: Vite logo.
+- public: Public assets for the frontend.
 
-* src: Source code for the frontend.
+  - alx-logo-white.png: Logo image.
+  - vite.svg: Vite logo.
 
-     + assets/css: CSS files
-       
-       => ndex.css: Main CSS file
+- src: Source code for the frontend.
 
-     + components: React components.
+  - assets/css: CSS files
 
-       => Explorer.css: CSS for Explorer component.
-  
-       => File.jsx: File component.
-  
-       => FileExplorer.jsx: File Explorer component.
-  
-       => Folder.jsx: Folder component.
-  
-       => NavFile.jsx: Navigation File component.
-  
-       => App.jsx: Main App component.
-  
-       => CodeBlock.jsx: Code Block component.
-  
-       => Explorer.jsx: Explorer component.
-   
-       => FileNavigation.jsx: File Navigation component.
-  
-       => Footer.jsx: Footer component.
-  
-       => Output.jsx: Output component.
-  
-       => Terminal.jsx: Terminal component.
-  
-       => Topbar.jsx: Topbar component.
-  
-       => main.jsx: Main entry point for the frontend.
+    => ndex.css: Main CSS file
 
-    + utils.js: Utility functions.
+  - components: React components.
 
-* .eslintrc.cjs: ESLint configuration file.
-  
-* .gitignore: Git ignore file.
-  
-* README.md: Documentation for the frontend.
-  
-* index.html: Main HTML file for the frontend.
-  
-* package-lock.json: Dependency lock file.
-  
-* package.json: NodeJS package file.
-  
-* postcss.config.js: PostCSS configuration file.
-  
-* tailwind.config.js: Tailwind CSS configuration file.
-  
-* vite.config.js: Vite configuration file.
-  
-* LICENSE: License file.
+    => Explorer.css: CSS for Explorer component.
 
-   # NodeJS :
+    => File.jsx: File component.
 
-* public: Public assets for the NodeJS backend.
+    => FileExplorer.jsx: File Explorer component.
 
-* scripts: Contains JavaScript files.
+    => Folder.jsx: Folder component.
 
-* index.js: Main script file.
+    => NavFile.jsx: Navigation File component.
 
-* style: CSS files for styling.
+    => App.jsx: Main App component.
 
-* views: View templates using EJS.
+    => CodeBlock.jsx: Code Block component.
 
-* doc.ejs: Documentation view.
+    => Explorer.jsx: Explorer component.
 
-* index.ejs: Main index view.
+    => FileNavigation.jsx: File Navigation component.
 
-* comands.js: Script to manage commands.
+    => Footer.jsx: Footer component.
 
-* dir.js: Directory management script.
+    => Output.jsx: Output component.
 
-* oneCommand.js: Single command execution script.
+    => Terminal.jsx: Terminal component.
 
-* package-lock.json: Dependency lock file.
+    => Topbar.jsx: Topbar component.
 
-* package.json: NodeJS package file.
+    => main.jsx: Main entry point for the frontend.
 
-* README.md: Documentation for the NodeJS backend.
+  - utils.js: Utility functions.
 
-   # Backend :
+- .eslintrc.cjs: ESLint configuration file.
+- .gitignore: Git ignore file.
+- README.md: Documentation for the frontend.
+- index.html: Main HTML file for the frontend.
+- package-lock.json: Dependency lock file.
+- package.json: NodeJS package file.
+- postcss.config.js: PostCSS configuration file.
+- tailwind.config.js: Tailwind CSS configuration file.
+- vite.config.js: Vite configuration file.
+- LICENSE: License file.
 
-* go: Contains Go-related files and modules. 
+  # NodeJS :
 
-* main.go: Entry point for the Go server. 
+- public: Public assets for the NodeJS backend.
 
-* go.mod: Go module file. 
+- scripts: Contains JavaScript files.
 
-* go.sum: Dependencies for the Go project. 
+- index.js: Main script file.
 
-* scripts: Scripts related to backend operations. 
+- style: CSS files for styling.
 
-* fixPortMaping.sh: Script to fix port mapping issues. 
+- views: View templates using EJS.
 
-* selectPort.sh: Script to select port. 
+- doc.ejs: Documentation view.
 
-* .air.toml: Configuration file for live reloading. 
+- index.ejs: Main index view.
 
-* socket_demo.html: Demonstration file for socket implementation. 
+- comands.js: Script to manage commands.
 
-* public: Publicly accessible files and assets. 
+- dir.js: Directory management script.
 
-* static: Static files for the backend. 
+- oneCommand.js: Single command execution script.
 
-* views: Backend view templates. 
+- package-lock.json: Dependency lock file.
 
-* doc.html: Documentation file. 
+- package.json: NodeJS package file.
 
-* index.html: Main HTML file for backend. 
+- README.md: Documentation for the NodeJS backend.
 
-* images: Contains image assets such as alx-logo-white-B2jpy1kh.png and alx-logo-white.png. 
+  # Backend :
 
-* README.md: Documentation for the backend. 
+- go: Contains Go-related files and modules.
 
-# License : 
+- main.go: Entry point for the Go server.
 
-This project is licensed under the terms specified in the LICENSE file.
+- go.mod: Go module file.
 
+- go.sum: Dependencies for the Go project.
+
+- scripts: Scripts related to backend operations.
+
+- fixPortMaping.sh: Script to fix port mapping issues.
+
+- selectPort.sh: Script to select port.
+
+- .air.toml: Configuration file for live reloading.
+
+- socket_demo.html: Demonstration file for socket implementation.
+
+- public: Publicly accessible files and assets.
+
+- static: Static files for the backend.
+
+- views: Backend view templates.
+
+- doc.html: Documentation file.
+
+- index.html: Main HTML file for backend.
+
+- images: Contains image assets such as alx-logo-white-B2jpy1kh.png and alx-logo-white.png.
+
+- README.md: Documentation for the backend.
+
+# AUTHORS :
+
+- AjwadG : ajwadelgandouz@yahoo.com
+- hamzahdili2001 : hdilihamza955@gmail.com
+- Cha1mae : chaimastaifa@gmail.com
+
+# License :
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

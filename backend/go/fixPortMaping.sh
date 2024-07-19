@@ -7,7 +7,7 @@ if [ $# -ne 1 ]; then
 fi
 
 port_number=$1
-file_path="static/public/scripts/index-DkS2jjSA.js"
+file_path="static/public/scripts/index.js"
 
 # Use sed to replace the port number
 sed -i "s/9999/${port_number}/" "${file_path}"

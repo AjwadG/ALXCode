@@ -2,11 +2,13 @@ package types
 
 import "sync"
 
+// IdCounter represents a counter for generating unique IDs
 type IdCounter struct {
 	Id      int
 	IdMutex sync.Mutex
 }
 
+// GetId increments the ID counter and returns the new ID
 func (i *IdCounter) GetId() int {
 	i.IdMutex.Lock()
 	defer i.IdMutex.Unlock()
@@ -14,6 +16,7 @@ func (i *IdCounter) GetId() int {
 	return i.Id
 }
 
+// Body represents the structure for body content
 type Body struct {
 	Path     string `json:"path"`
 	OldPath  string `json:"oldPath"`
@@ -25,6 +28,7 @@ type Body struct {
 	Content  string `json:"content"`
 }
 
+// FileType represents the structure for file types
 type FileType struct {
 	Id     int        `json:"id"`
 	Path   string     `json:"path"`
@@ -34,12 +38,14 @@ type FileType struct {
 	Childs []FileType `json:"childs"`
 }
 
-
+// ComnadReturn represents the return structure for commands
 type ComnadReturn struct {
 	Succeed bool   `json:"succeed"`
 	Output  string `json:"output"`
 	Error   string `json:"error"`
 }
+
+// ErrorReturn represents the return structure for errors
 type ErrorReturn struct {
 	Error string `json:"error"`
 }

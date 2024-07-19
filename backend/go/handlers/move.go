@@ -3,9 +3,17 @@ package handlers
 import (
 	"ALXCode/types"
 	"ALXCode/utills"
+
 	"github.com/gofiber/fiber/v2"
 )
 
+// HandleMove handles the PUT /move endpoint.
+// It moves a file or directory to a new location.
+// Parameters:
+//   - c: *fiber.Ctx - the context of the request
+//
+// Returns:
+//   - error: the error if any occurred
 func HandleMove(c *fiber.Ctx) error {
 	body := new(types.Body)
 	if err := c.BodyParser(body); err != nil {

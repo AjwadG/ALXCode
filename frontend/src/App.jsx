@@ -30,8 +30,8 @@ function App() {
   const [activeFile, setActiveFile] = useState(null);
   const [fileContent, setFileContent] = useState("");
   const [outPut, setOutput] = useState("");
-  const [currentPath, setCurrentPath] = useState("/home");
   const [structure, setStructure] = useState(NOT_FOUND);
+  const [newDirectory, setNewDirectory] = useState();
 
   useEffect(() => {
     if (activeFile) {
@@ -67,6 +67,7 @@ function App() {
       setActiveFile
     );
   };
+  
 
   const runButtonClickHandler = async () => {
     await handleRunButtonClick(activeFile, setOutput, outPut);
@@ -79,7 +80,7 @@ function App() {
       setActiveFile,
       setFileContent,
       setStructure,
-      setCurrentPath
+      setNewDirectory
     );
   };
 
@@ -96,7 +97,6 @@ function App() {
             setNavFiles={navFilesChangeHandler}
             structure={structure}
             setStructure={setStructure}
-            currentPath={currentPath}
           />
           <div style={CustomWidth}>
             <FileNavigation
@@ -111,6 +111,8 @@ function App() {
               outPut={outPut}
               fileContent={fileContent}
               onSaveFileContent={handleSaveFileContent}
+              newDirectory={newDirectory}
+              setNewDirectory={setNewDirectory}
             />
           </div>
         </div>

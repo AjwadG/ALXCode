@@ -142,6 +142,9 @@ export const DND = (
             draggedFile.path = targetFolder.path + "/" + draggedFile.name;
             this.fixChilds(draggedFile);
             targetFolder.childs.push(draggedFile);
+            structure.childs = structure.childs.filter(
+              (child) => child.parent.id === structure.id
+            );
             setStructure(structure);
           } else {
             toast.error(response.data.output);

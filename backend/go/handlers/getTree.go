@@ -11,6 +11,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// HandleGetTree handles the GET /getTree endpoint.
+// It retrieves the directory tree starting from the specified path.
+// Parameters:
+//   - c: *fiber.Ctx - the context of the request
+//
+// Returns:
+//   - error: the error if any occurred
 func HandleGetTree(c *fiber.Ctx) error {
 	path := c.Query("path")
 	if path == "" {
@@ -64,6 +71,13 @@ func HandleGetTree(c *fiber.Ctx) error {
 	return c.JSON(tree)
 }
 
+// getTree retrieves the directory tree starting from the specified path.
+// It is a recursive function that calls itself for each subdirectory found.
+// Parameters:
+//   - files: []fs.DirEntry - the list of files and directories in the current path
+//   - parent: *types.FileType - the parent node of the current path
+//   - id: *types.IdCounter - the counter for generating unique IDs
+//   - prevWG: *sync.WaitGroup - the wait group for synchronizing the function
 func getTree(files []fs.DirEntry, parent *types.FileType, id *types.IdCounter, prevWG *sync.WaitGroup) {
 	var wg sync.WaitGroup
 

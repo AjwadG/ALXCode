@@ -5,14 +5,22 @@ import (
 
 	"ALXCode/types"
 	"ALXCode/utills"
+
 	"github.com/gofiber/fiber/v2"
 )
 
+// HandleRename handles the PUT /rename endpoint.
+// It renames a file or directory based on the provided old path and new name.
+// Parameters:
+//   - c: *fiber.Ctx - the context of the request
+//
+// Returns:
+//   - error: the error if any occurred
 func HandleRename(c *fiber.Ctx) error {
 	body := new(types.Body)
 	if err := c.BodyParser(body); err != nil {
 		return c.Status(400).JSON(&types.ErrorReturn{
-			Error:  err.Error(),
+			Error: err.Error(),
 		})
 	}
 

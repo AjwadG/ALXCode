@@ -12,6 +12,13 @@ import (
 
 var sessionCounter int64
 
+// TerminalSession represents a terminal session
+//
+// Fields:
+//   - ID: int64 - the ID of the session
+//   - Dir: string - the current working directory
+//   - CmdCh: chan string - the channel for receiving commands
+//   - OutCh: chan string - the channel for sending output
 type TerminalSession struct {
 	ID    int64
 	Dir   string
@@ -19,6 +26,8 @@ type TerminalSession struct {
 	OutCh chan string
 }
 
+// newTerminalSession creates a new TerminalSession with a unique ID and initializes the channels.
+// Returns a pointer to the new TerminalSession.
 func newTerminalSession() *TerminalSession {
 	id := atomic.AddInt64(&sessionCounter, 1)
 	return &TerminalSession{
@@ -29,6 +38,11 @@ func newTerminalSession() *TerminalSession {
 	}
 }
 
+// runShell runs the shell for the terminal session.
+// It reads commands from the CmdCh channel, executes them, and sends the output to the OutCh channel.
+// If the command is a "cd" command, it updates the current directory and sends a message about the change.
+// Parameters:
+//   - ts: *TerminalSession - the terminal session
 func (ts *TerminalSession) runShell() {
 	for cmdStr := range ts.CmdCh {
 		if strings.HasPrefix(cmdStr, "cd ") {
@@ -59,6 +73,11 @@ func (ts *TerminalSession) runShell() {
 	}
 }
 
+// HandleWebSocket handles the WebSocket connection for the terminal session.
+// It creates a new terminal session, runs the shell, and handles the WebSocket
+// messages.
+// Parameters:
+//   - conn: *websocket.Conn - the WebSocket connection
 func HandleWebSocket(conn *websocket.Conn) {
 	session := newTerminalSession()
 	filters := []string{"vi", "sudo", "vim", "nano", "clear", "exit"}

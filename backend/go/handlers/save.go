@@ -4,14 +4,22 @@ import (
 	"os"
 
 	"ALXCode/types"
+
 	"github.com/gofiber/fiber/v2"
 )
 
+// HandleSave handles the POST /save endpoint.
+// It saves the content of a file to the specified path.
+// Parameters:
+//   - c: *fiber.Ctx - the context of the request
+//
+// Returns:
+//   - error: the error if any occurred
 func HandleSave(c *fiber.Ctx) error {
 	body := new(types.Body)
 	if err := c.BodyParser(body); err != nil {
 		return c.Status(400).JSON(&types.ErrorReturn{
-			Error:  err.Error(),
+			Error: err.Error(),
 		})
 	}
 	if body.FilePath == "" {

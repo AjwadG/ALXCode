@@ -15,6 +15,10 @@ export const deleteItem = async (
     folder.childs = folder.childs.filter((child) => child.id !== item.id);
     folder.childs.forEach(deleteRecursively);
   };
+  if (item.id === structure.id) {
+    toast.error("Cannot delete root folder");
+    return;
+  }
   try {
     const response = await axios.delete(`${BASE_URL}/api/delete`, {
       data: { path: item.path },
@@ -113,13 +117,13 @@ export const handleTopBarSearch = async (
   setActiveFile,
   setFileContent,
   setStructure,
-  setCurrentPath
+  setNewDirectory
 ) => {
   toast.success(`Searching for ${path}`);
   try {
     const response = await axios.get(`${BASE_URL}/api/getTree?path=${path}`);
     const newStructure = buildStructure(response.data);
-    setCurrentPath(path);
+    setNewDirectory(path);
     setOpenFiles([]);
     setActiveFile(null);
     setFileContent("");

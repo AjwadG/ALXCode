@@ -15,6 +15,8 @@ function CodeBlock({
   fileContent,
   onSaveFileContent,
   outPut,
+  newDirectory,
+  setNewDirectory,
 }) {
   const [language, setLanguage] = useState("plaintext");
   const [content, setContent] = useState(fileContent);
@@ -78,7 +80,12 @@ function CodeBlock({
         />
       )}
 
-      {isTerminalVisible && <Terminal />}
+      {isTerminalVisible && (
+        <Terminal
+          newDirectory={newDirectory}
+          setNewDirectory={setNewDirectory}
+        />
+      )}
       {isOutputVisible && <Output outPut={outPut} />}
     </div>
   );

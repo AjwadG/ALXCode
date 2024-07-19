@@ -58,10 +58,10 @@ function buildStructure(rootNode) {
   return rootNode;
 }
 
-function Explorer({ setNavFiles, structure, setStructure, currentPath }) {
+function Explorer({ setNavFiles, structure, setStructure }) {
   useQuery("structure", () => {
     if (structure.name !== "NOT FOUND") return;
-    fetch(`${BASE_URL}/api/getTree?path=${currentPath}`)
+    fetch(`${BASE_URL}/api/getTree?path=/home`)
       .then((res) => res.json())
       .then((data) => {
         const fileStructure = buildStructure(data);
