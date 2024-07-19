@@ -6,7 +6,7 @@ import "./assets/css/index.css";
 function Output({ outPut }) {
   return (
     <ResizableBox
-      className="resizable-box overflow-auto absolute bottom-2 w-full bg-second  text-white"
+      className="resizable-box overflow-auto absolute bottom-2 w-full bg-second text-white"
       width={Infinity}
       height={200}
       minConstraints={[Infinity, 50]}
@@ -15,8 +15,10 @@ function Output({ outPut }) {
       handle={<span className="custom-vertical-handle" />}
       resizeHandles={["n"]}
     >
-      <div className="bg-green-500 p-2 text-xs uppercase">Output</div>
-      <pre className="output p-2">{outPut}</pre>
+      <>
+      <div className="bg-green-500 p-2 text-xs uppercase absolute top-0 w-full">Output</div>
+      <pre className="output p-2 mt-5">{outPut}</pre>
+      </>
     </ResizableBox>
   );
 }
