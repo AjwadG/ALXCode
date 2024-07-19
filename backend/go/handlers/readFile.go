@@ -7,15 +7,12 @@ import (
 )
 
 func HandleReadFile(c *fiber.Ctx) error {
-	body := new(types.Body)
-	if err := c.BodyParser(body); err != nil {
-		return err
-	}
-	if body.Path == "" {
+	path := c.Query("path")
+	if path == "" {
 		return c.Status(400).JSON(&types.ErrorReturn{
 			Error: "path is required",
 		})
 	}
-	output := utills.OneCommand("cat", body.Path)
+	output := utills.OneCommand("cat", path)
 	return c.JSON(output)
 }

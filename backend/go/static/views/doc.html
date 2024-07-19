@@ -31,28 +31,16 @@
     <div class="endpoint">
       <h2>GET /api/getTree</h2>
       <p>Gets the tree of the sublied path</p>
-      <p><strong>Request Body:</strong></p>
-      <code>
-        <pre>
-{
-      "path": "/path/to/directory"
-}
-</pre
-        >
-      </code>
+      <p><strong>Query Parameters:</strong></p>
+      <ul>
+        <li><code>path</code>: /path/to/directory</li>
+      </ul>
       <div class="example">
         <p><strong>Example Request:</strong></p>
         <div class="request">
           <code>
             <span class="get-method">GET</span>
-            SERVER_URL:SERVER_PORT/api/getTree
-          </code>
-          <code>
-            <pre>
-{
-      "path": "/home/ajwadg/ajwad/alx/ALXCode/backend/views",
-}</pre
-            >
+            SERVER_URL:SERVER_PORT/api/getTree?path=/home/ajwadg/ajwad/alx/ALXCode/backend
           </code>
         </div>
         <p><strong>Example Response:</strong></p>
@@ -91,27 +79,16 @@
     <div class="endpoint">
       <h2>GET /api/readFile</h2>
       <p>Gets the Conten of the sublied file</p>
-      <p><strong>Request Body:</strong></p>
-      <code>
-        <pre>
-{
-      "path": "/path/to/file"
-}</pre
-        >
-      </code>
+      <p><strong>Query Parameters:</strong></p>
+      <ul>
+        <li><code>path</code>: /path/to/file</li>
+      </ul>
       <div class="example">
         <p><strong>Example Request:</strong></p>
         <div class="request">
           <code>
             <span class="get-method">GET</span>
-            SERVER_URL:SERVER_PORT/api/readFile
-          </code>
-          <code>
-            <pre>
-{
-      "path": "/home/ajwadg/ajwad/alx/ALXCode/backend/views/doc.ejs",
-}</pre
-            >
+            SERVER_URL:SERVER_PORT/api/readFile?path=/home/ajwadg/ajwad/alx/ALXCode/backend/go/static/views/doc.ejs
           </code>
         </div>
         <p><strong>Example Response:</strong></p>
@@ -339,6 +316,49 @@
 {
     "succeed": true,
     "output": "",
+    "error": ""
+}</pre
+            >
+          </code>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <h2>PUT /api/run</h2>
+      <p>
+        Executes the file according to the file extension if it has one otherwise it runs it normaly
+      </p>
+      <p><strong>Request Body:</strong></p>
+      <code>
+        <pre>
+{
+      "Path": "/path/to/file"
+}</pre
+        >
+      </code>
+      <div class="example">
+        <p><strong>Example Request:</strong></p>
+        <div class="request">
+          <code>
+            <span class="get-method">PUT</span>
+            SERVER_URL:SERVER_PORT/api/run
+          </code>
+          <code>
+            <pre>
+{
+      "filePath": "/home/ajwadg/ajwad/alx/ALXCode/backend/views/script.js"
+}</pre
+            >
+          </code>
+        </div>
+        <p><strong>Example Response:</strong></p>
+        <div class="response">
+          <code>
+            <pre>
+{
+    "succeed": true,
+    "output": "Hello from script.js",
     "error": ""
 }</pre
             >

@@ -1,7 +1,6 @@
 import React from "react";
 import { FaFile } from "react-icons/fa";
 
-
 function NavFile({ file, setNavFiles, activeFile }) {
   const classNames = `flex items-center justify-between text-gray-400 h-full p-3 w-auto gap-3 ${
     activeFile ? "bg-zinc-800" : "bg-zinc-900"
@@ -23,4 +22,3 @@ function NavFile({ file, setNavFiles, activeFile }) {
 }
 
 export default NavFile;
-

@@ -1,33 +1,37 @@
 package handlers
 
 import (
-	"fmt"
 	"io/fs"
 	"os"
 	"strings"
 	"sync"
 
 	"ALXCode/types"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 func HandleGetTree(c *fiber.Ctx) error {
-	body := new(types.Body)
-	if err := c.BodyParser(body); err != nil {
-		return err
-	}
-	if body.Path == "" {
-		fmt.Println(body.Path, "error body", body)
+	path := c.Query("path")
+	if path == "" {
 		return c.Status(400).JSON(&types.ErrorReturn{
 			Error: "path is required",
 		})
 	}
 
-	fileInfo, err := os.Stat(body.Path)
+	fileInfo, err := os.Stat(path)
 	if err != nil {
-		return err
+		return c.Status(400).JSON(&types.ErrorReturn{
+			Error: err.Error(),
+		})
 	}
-	splitedPath := strings.Split(body.Path, "/")
+
+	if !fileInfo.IsDir() {
+		return c.Status(400).JSON(&types.ErrorReturn{
+			Error: "path is not a directory",
+		})
+	}
+	splitedPath := strings.Split(path, "/")
 	var parent string
 	if len(splitedPath) <= 1 {
 		parent = "/"
@@ -37,7 +41,7 @@ func HandleGetTree(c *fiber.Ctx) error {
 	tree := &types.FileType{
 		Dir:    fileInfo.IsDir(),
 		Id:     0,
-		Path:   body.Path,
+		Path:   path,
 		Name:   fileInfo.Name(),
 		Parent: parent,
 		Childs: []types.FileType{},
@@ -48,8 +52,9 @@ func HandleGetTree(c *fiber.Ctx) error {
 	}
 	subdirs, err := os.ReadDir(tree.Path)
 	if err != nil {
-		fmt.Println(err)
-		return err
+		return c.Status(400).JSON(&types.ErrorReturn{
+			Error: err.Error(),
+		})
 	}
 	var wg sync.WaitGroup
 

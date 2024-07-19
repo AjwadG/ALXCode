@@ -44,8 +44,8 @@ func main() {
 
 	app.Route("/api", func(api fiber.Router) {
 
-		api.Put("/getTree", handlers.HandleGetTree)
-		api.Put("/readFile", handlers.HandleReadFile)
+		api.Get("/getTree", handlers.HandleGetTree)
+		api.Get("/readFile", handlers.HandleReadFile)
 		api.Put("/move", handlers.HandleMove)
 		api.Put("/rename", handlers.HandleRename)
 		api.Delete("/delete", handlers.HandleDelete)
@@ -53,6 +53,10 @@ func main() {
 		api.Post("/save", handlers.HandleSave)
 		api.Put("/run", handlers.HandleRun)
 
+	})
+
+	app.Get("/*", func(c *fiber.Ctx) error {
+		return c.Redirect("/")
 	})
 
 	log.Fatal(app.Listen(":" + PORT))

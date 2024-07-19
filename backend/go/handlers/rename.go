@@ -11,7 +11,9 @@ import (
 func HandleRename(c *fiber.Ctx) error {
 	body := new(types.Body)
 	if err := c.BodyParser(body); err != nil {
-		return err
+		return c.Status(400).JSON(&types.ErrorReturn{
+			Error:  err.Error(),
+		})
 	}
 
 	if body.OldPath == "" {

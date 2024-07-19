@@ -14,12 +14,23 @@ function FileExplorer({ setNavFiles, structure, setStructure }) {
       <Folder
         folder={structure}
         setNavFiles={setNavFiles}
-        onDelete={(item) => deleteItem(item, structure, setStructure, setNavFiles)}
-        DND={DND(fileInEdit, setFileInEdit, fileInCreation, setFileInCreation, draggedFile, setDraggedFile, setStructure, structure, setNavFiles)}
+        onDelete={(item) =>
+          deleteItem(item, structure, setStructure, setNavFiles)
+        }
+        DND={DND(
+          fileInEdit,
+          setFileInEdit,
+          fileInCreation,
+          setFileInCreation,
+          draggedFile,
+          setDraggedFile,
+          setStructure,
+          structure,
+          setNavFiles
+        )}
       />
     </div>
   );
 }
 
 export default FileExplorer;
-

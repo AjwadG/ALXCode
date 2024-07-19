@@ -5,12 +5,17 @@ import FileNavigation from "./FileNavigation";
 import CodeBlock from "./CodeBlock";
 import Footer from "./Footer";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { toast } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { BASE_URL, NOT_FOUND } from "./components/constants";
 import { buildStructure } from "./components/helpers";
-import { handleNavFilesChange, handleSaveFileContent, handleRunButtonClick, handleTopBarSearch } from "./components/api";
+import {
+  handleNavFilesChange,
+  handleSaveFileContent,
+  handleRunButtonClick,
+  handleTopBarSearch,
+} from "./components/api";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +30,7 @@ function App() {
   const [activeFile, setActiveFile] = useState(null);
   const [fileContent, setFileContent] = useState("");
   const [outPut, setOutput] = useState("");
+  const [currentPath, setCurrentPath] = useState("/home");
   const [structure, setStructure] = useState(NOT_FOUND);
 
   useEffect(() => {
@@ -52,7 +58,14 @@ function App() {
   };
 
   const navFilesChangeHandler = async (file, isAdd, refresh) => {
-    await handleNavFilesChange(file, isAdd, refresh, openFiles, setOpenFiles, setActiveFile);
+    await handleNavFilesChange(
+      file,
+      isAdd,
+      refresh,
+      openFiles,
+      setOpenFiles,
+      setActiveFile
+    );
   };
 
   const runButtonClickHandler = async () => {
@@ -60,7 +73,14 @@ function App() {
   };
 
   const topBarSearchHandler = async (path) => {
-    await handleTopBarSearch(path, setOpenFiles, setActiveFile, setFileContent, setStructure);
+    await handleTopBarSearch(
+      path,
+      setOpenFiles,
+      setActiveFile,
+      setFileContent,
+      setStructure,
+      setCurrentPath
+    );
   };
 
   return (
@@ -76,6 +96,7 @@ function App() {
             setNavFiles={navFilesChangeHandler}
             structure={structure}
             setStructure={setStructure}
+            currentPath={currentPath}
           />
           <div style={CustomWidth}>
             <FileNavigation

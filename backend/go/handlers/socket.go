@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"log"
 	"os/exec"
 	"strings"
 	"sync/atomic"
 
 	"ALXCode/utills"
+
 	"github.com/gofiber/websocket/v2"
 )
 
@@ -73,7 +73,6 @@ func HandleWebSocket(conn *websocket.Conn) {
 	for {
 		mt, msg, err := conn.ReadMessage()
 		if err != nil {
-			log.Println("read:", err)
 			break
 		}
 
@@ -90,7 +89,6 @@ func HandleWebSocket(conn *websocket.Conn) {
 
 		err = conn.WriteMessage(mt, []byte(output))
 		if err != nil {
-			log.Println("write:", err)
 			break
 		}
 	}

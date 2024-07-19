@@ -31,7 +31,6 @@ const NOT_FOUND = {
 const BASE_URL = document.location.origin.includes("localhost")
   ? "http://localhost:3000"
   : document.location.origin;
-const curretnPath = "/home"; // edit this
 
 function buildStructure(rootNode) {
   function buildChilds(parent) {
@@ -59,25 +58,17 @@ function buildStructure(rootNode) {
   return rootNode;
 }
 
-function Explorer({ setNavFiles, structure, setStructure }) {
+function Explorer({ setNavFiles, structure, setStructure, currentPath }) {
   useQuery("structure", () => {
-    fetch(`${BASE_URL}/api/getTree`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        path: curretnPath,
-      }),
-    })
+    if (structure.name !== "NOT FOUND") return;
+    fetch(`${BASE_URL}/api/getTree?path=${currentPath}`)
       .then((res) => res.json())
       .then((data) => {
         const fileStructure = buildStructure(data);
         setStructure(fileStructure);
       })
-      .catch((error) => {
+      .catch(() => {
         setStructure(NOT_FOUND);
-        toast.error(error);
       });
   });
 
