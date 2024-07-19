@@ -55,18 +55,19 @@ function Terminal() {
 
   return (
     <ResizableBox
-      className="resizable-box overflow-auto p-4 absolute bottom-2 w-full bg-second border-t-2 border-slate-600 text-white"
+      className="resizable-box overflow-auto absolute bottom-2 w-full bg-second  text-white"
       width={Infinity}
-      height={250}
+      height={300}
       minConstraints={[Infinity, 50]}
       maxConstraints={[Infinity, 500]}
       axis="y"
       handle={<span className="custom-vertical-handle" />}
       resizeHandles={["n"]}
     >
+      <div className="bg-sky-400 p-2 text-xs uppercase">Terminal</div>
       <div
         ref={terminalRef}
-        className="terminal-content overflow-auto max-h-full"
+        className="terminal-content overflow-auto max-h-full p-2"
       >
         <pre className="output">{output}</pre>
         <div className="flex justify-center items-center mt-2">
