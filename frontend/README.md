@@ -1,6 +1,14 @@
-# React + Vite
+# React + Vite :
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This template provides a streamlined yet robust setup for seamless React integration with Vite. It includes Hot Module Replacement (HMR) for rapid updates during development and a set of ESLint rules to ensure code quality and consistency across the project.
+
+# Features :
+
+Fast Development: Instant server start and fast HMR.
+Optimized Build: Efficient builds with Rollup.
+ESLint Integration: Maintain code quality with ESLint.
+
+# Official Plugins :
 
 Currently, two official plugins are available:
 
